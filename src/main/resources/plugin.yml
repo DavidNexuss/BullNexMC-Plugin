@@ -11,5 +11,13 @@ commands:
         description: An example command
         permission: spigotplugin.example
         usage: /<command>
+    update:
+        description: Actualiza el plugin
+        permission: spigotplugin.example
+        usage: /<command>
+    location:
+        description: Devuelve el path del plugin
+        permission: spigotplugin.example
+        usage: /<command>
 
 permissions: {}

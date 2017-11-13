@@ -3,6 +3,12 @@ package com.nsoft.bullnexmc;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class SpigotPlugin extends JavaPlugin {
+	
+	public static SpigotPlugin plugin;
+	public SpigotPlugin() {
+		
+		plugin = this;
+	}
     @Override
     public void onDisable() {
         // Don't log disabling, Spigot does that for you automatically!

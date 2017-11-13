@@ -8,16 +8,19 @@ main: ${mainClass}
 
 commands:
     example:
-        description: An example command
-        permission: spigotplugin.example
+        description: No hago nada xDDDDD Bla Bla
+        permission: bullnexmc.normal
         usage: /<command>
     update:
-        description: Actualiza el plugin
-        permission: spigotplugin.example
+        description: Actualiza el plugin a la nueva version
+        permission: bullnexmc.update
         usage: /<command>
-    location:
-        description: Devuelve el path del plugin
-        permission: spigotplugin.example
+    bn-size:
+        description: Devuelve el tamaño del plugin
+        permission: bullnexmc.update
         usage: /<command>
 
-permissions: {}
+permissions:
+    bullnexmc.update:
+        description: Permiso para actualizar el plugin
+        default: op

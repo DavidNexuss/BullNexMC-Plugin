@@ -1,4 +1,4 @@
-package me.sgray.template.spigotplugin;
+package com.nsoft.bullnexmc;
 
 import org.bukkit.plugin.java.JavaPlugin;
 

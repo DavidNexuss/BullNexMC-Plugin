@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## Summary
 
 The SpigotPlugin project is a template for creating a new project for the Spigot server implementation for Minecraft. It can compile out of box, but will do absolutely nothing without modification.
@@ -62,3 +63,7 @@ misrepresented as being the original software.
 
 3. This notice may not be removed or altered from any source
 distribution.
+=======
+# BullNexMC-Plugin
+The BullNexMC Oficial Plugin
+>>>>>>> 907b74caafe012ac4e79d88cff913bd6291ac687

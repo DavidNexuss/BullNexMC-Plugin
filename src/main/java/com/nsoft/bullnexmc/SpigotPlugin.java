@@ -70,7 +70,8 @@ public class SpigotPlugin extends JavaPlugin {
     	Update a = new Update();
     	getServer().broadcast( ChatColor.GREEN +"[BullNexRP] " + ChatColor.BLUE + "Plugin iniciado!", "bullnexmc.update");
         // Commands enabled with following method must have entries in plugin.yml
-        getCommand("example").setExecutor(new ExampleCommand(this));
+        getCommand("bn-drop").setExecutor(new DeadFall.DropCommand("bn-drop"));
+    	getCommand("example").setExecutor(new ExampleCommand(this));
         getCommand("update").setExecutor(a);
         getCommand("bn-size").setExecutor(a);
         getCommand("location").setExecutor(new Location("location"));

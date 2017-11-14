@@ -19,6 +19,10 @@ commands:
         description: Devuelve el tamaño del plugin
         permission: bullnexmc.update
         usage: /<command>
+    bn-drop:
+        description: Hace caer un bloque
+        permission: bullnexmc.update
+        usage: /<command> <x> <y> <z>
 
 permissions:
     bullnexmc.update:

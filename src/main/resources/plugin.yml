@@ -7,6 +7,10 @@ website: ${url}
 main: ${mainClass}
 
 commands:
+    spawn:
+        description: Teletransporte instantáneo al spawn.
+        permission: bullnexmc.normal
+        usage: /<command>
     example:
         description: No hago nada xDDDDD Bla Bla
         permission: bullnexmc.normal
@@ -23,6 +27,18 @@ commands:
         description: Hace caer un bloque
         permission: bullnexmc.update
         usage: /<command> <x> <y> <z>
+    bn-bolt:
+       description: Invoca un rayo en la cara de alguien xD (Solo SuperAdmins)
+       permission: bullnexmc.update
+       usage: /<command> <Personaname>
+    bn-broad:
+       description: Retransmite un mensaje a todos los usuarios (Solo SuperAdmins)
+       permission: bullnexmc.update
+       usage: /<command> <text>
+    bn-DropBetaDragonBalls:
+       description: Genera las bolas del dragon, caeran del cielo! (Solo SuperAdmins)
+       permission: bullnexmc.update
+       usage: /<command> <numero de bloques>
 
 permissions:
     bullnexmc.update:

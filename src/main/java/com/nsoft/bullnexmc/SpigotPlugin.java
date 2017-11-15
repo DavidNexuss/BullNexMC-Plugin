@@ -3,12 +3,20 @@ package com.nsoft.bullnexmc;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.avaje.ebeaninternal.server.subclass.GetterSetterMethods;
 
 import net.md_5.bungee.api.ChatColor;
 
-public class SpigotPlugin extends JavaPlugin {
+public class SpigotPlugin extends JavaPlugin implements Listener {
 	
 	public static SpigotPlugin plugin;
 	public SpigotPlugin() {
@@ -20,6 +28,36 @@ public class SpigotPlugin extends JavaPlugin {
         // Don't log disabling, Spigot does that for you automatically!
     }
 
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event) {
+    	
+    	DBall.onBlockPlaced(event.getBlock());
+    }
+    @EventHandler
+	public void onPostLogin(PlayerJoinEvent event) {
+		
+    	Player p = event.getPlayer();
+    	if(event.getPlayer().hasPlayedBefore()) {
+    		
+    		sendMessage(p,"Bienvenido " + p,0);
+    	}else {
+    		
+    		sendMessage(p, "Bienvenido a BullNexMC!",2);
+    		sendMessage(p, "Si tienes dudas visita:",2);
+    		sendMessage(p, "",2); //TODO add Web
+    		
+    	}
+    	
+    	DBall.onConnection(p);
+	}
+    public static void BroadCast(String msg) {
+    	
+    	plugin.getServer().broadcastMessage(ChatColor.GREEN + "[BullNexRP] " + ChatColor.GOLD + msg);
+    }
+    public static void NotOPMessage(CommandSender sender) {
+    	
+    	sendMessage(sender, "Solo los operadores pueden ejecutar este comando!", 2);
+    }
     public static void sendMessage(CommandSender sender,String msg) {
     	
     	sendMessage(sender, msg, 0);
@@ -70,12 +108,19 @@ public class SpigotPlugin extends JavaPlugin {
     	Update a = new Update();
     	getServer().broadcast( ChatColor.GREEN +"[BullNexRP] " + ChatColor.BLUE + "Plugin iniciado!", "bullnexmc.update");
         // Commands enabled with following method must have entries in plugin.yml
+    	
+    	getCommand("spawn").setExecutor(new Admin.Spawn("spawn"));
+    	getCommand("bn-dropbetadragonballs").setExecutor(new DBall.BetaDragonBalls("bn-dropbetadragonballs"));
+    	getCommand("bn-broad").setExecutor(new Admin.BroadCast("bn-broad"));
+    	getCommand("bn-bolt").setExecutor(new DeadFall.BoltCommand("bn-bolt"));
         getCommand("bn-drop").setExecutor(new DeadFall.DropCommand("bn-drop"));
     	getCommand("example").setExecutor(new ExampleCommand(this));
         getCommand("update").setExecutor(a);
         getCommand("bn-size").setExecutor(a);
-        getCommand("location").setExecutor(new Location("location"));
         getCommand("writefile").setExecutor(new WriteFile("writefile"));
         
+        getServer().getPluginManager().registerEvents(this, this);
     }
+    
+    
 }

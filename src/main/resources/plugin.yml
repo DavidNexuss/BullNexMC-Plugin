@@ -11,6 +11,10 @@ commands:
         description: Teletransporte instantáneo al spawn.
         permission: bullnexmc.normal
         usage: /<command>
+    radar:
+        description: Actualiza tu brujula para que busque bloques de diamante
+        permission: bullnexmc.normal
+        usage: /<command>
     example:
         description: No hago nada xDDDDD Bla Bla
         permission: bullnexmc.normal
@@ -44,3 +48,5 @@ permissions:
     bullnexmc.update:
         description: Permiso para actualizar el plugin
         default: op
+    bullnexmc.normal:
+        default: true

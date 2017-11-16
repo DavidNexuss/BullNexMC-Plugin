@@ -1,5 +1,7 @@
 package com.nsoft.bullnexmc;
 
+import java.util.ArrayList;
+
 import javax.persistence.PostLoad;
 
 import org.bukkit.Location;
@@ -15,13 +17,14 @@ import org.bukkit.event.EventException;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.EventExecutor;
 
 import net.md_5.bungee.api.ChatColor;
 
 public class DBall {
 
-	public static Location[] Balls = new Location[7];
+	public static Block[] balls = new Block[2];
 	public DBall() {
 		
 		
@@ -30,30 +33,39 @@ public class DBall {
 	public static Location nearLocation(Location playerPos) {
 		
 		
-		if(Balls[0] == null) {
+		if(balls.length == 0) {
 			
 			return playerPos;
 		}
-		Location near = Balls[0];
-		int lenght = (Balls[0].getBlockX() - playerPos.getBlockX())^2
-					+(Balls[0].getBlockY() - playerPos.getBlockY())^2
-					+(Balls[0].getBlockZ() - playerPos.getBlockZ())^2;
+		Location near = balls[0].getLocation();
+		int lenght = (balls[0].getLocation().getBlockX() - playerPos.getBlockX())^2
+					+(balls[0].getLocation().getBlockY() - playerPos.getBlockY())^2
+					+(balls[0].getLocation().getBlockZ() - playerPos.getBlockZ())^2;
 		
-		for (Location location : Balls) {
+		for (Block b: balls) {
 		
-			int lenght2 = (location.getBlockX() - playerPos.getBlockX())^2
-						 +(location.getBlockY() - playerPos.getBlockY())^2
-						 +(location.getBlockZ() - playerPos.getBlockZ())^2;
-			if(lenght2 < lenght) {
+			if(b.getType().equals(Material.DIAMOND_BLOCK)) {
 				
-				near = location;
-				lenght = lenght2;
+				Location location = b.getLocation();
+				int lenght2 = (location.getBlockX() - playerPos.getBlockX())^2
+							 +(location.getBlockY() - playerPos.getBlockY())^2
+							 +(location.getBlockZ() - playerPos.getBlockZ())^2;
+				if(lenght2 < lenght) {
+					
+					near = location;
+					lenght = lenght2;
+				}
 			}
+			
 		}
 		
 		return near;
 	}
 	
+	public static void resetCompassForPlayer(Player p) {
+		
+		p.setCompassTarget(nearLocation(p.getLocation()));
+	}
 	public static void resetCompass() {
 		
 		for (Player p : SpigotPlugin.plugin.getServer().getOnlinePlayers()) {
@@ -67,9 +79,9 @@ public class DBall {
 			
 			SpigotPlugin.plugin.getServer().broadcastMessage(ChatColor.GREEN + "[BullNexRP] " + ChatColor.GOLD + "found block");
 			
-			Location[] balls2 = new Location[Balls.length + 1];
-			System.arraycopy(Balls, 0, balls2, 0, Balls.length);
-			balls2[Balls.length] = block.getLocation();
+			Block[] balls2 = new Block[balls.length + 1];
+			System.arraycopy(balls, 0, balls2, 0, balls.length);
+			balls2[balls.length] = block;
 			
 			resetCompass();
 		}
@@ -79,6 +91,45 @@ public class DBall {
 		player.setCompassTarget(nearLocation(player.getLocation()));
 	}
 	
+	static class radar extends MyComandExecutor{
+
+		public radar(String name) {
+			super(name);
+			// TODO Auto-generated constructor stub
+		}
+		
+		@Override
+		public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+			// TODO Auto-generated method stub
+			if(!super.onCommand(sender, command, label, args)) return true;
+			
+				
+				SpigotPlugin.sendMessage(sender, "Este comando aun no funciona");
+				return true;
+			/*if(!(sender instanceof Player)) {
+				
+				SpigotPlugin.sendMessage(sender,"Este comando solo lo pueden usar jugadores",2);
+				return true;
+			}
+			
+			Player p = (Player)sender;
+			
+			if(p.getItemInHand().getType().equals(Material.COMPASS)) {
+				
+				SpigotPlugin.sendMessage(sender,"Coges tu brújula y pulsas el boton de buscar");
+				resetCompassForPlayer(p);
+				
+				return true;
+			}else {
+				
+				SpigotPlugin.sendMessage(sender,"Debes tener una brújula en la mano", 2);
+				return true;
+			}*/
+			
+		}
+		
+		
+	}
 	static class BetaDragonBalls extends MyComandExecutor{
 
 		public BetaDragonBalls(String name) {
@@ -101,6 +152,7 @@ public class DBall {
 			if(args.length != 1) {
 				
 				SpigotPlugin.sendMessage(sender, "Este comando necesita un argumento", 2);
+				return true;
 			}
 			
 			int n = 0;
@@ -111,6 +163,7 @@ public class DBall {
 			} catch (NumberFormatException e) {
 				
 				SpigotPlugin.sendMessage(sender, "Debes introducir un numero!",2);
+				return true;
 			}
 			
 			World world = SpigotPlugin.plugin.getServer().getWorld("world");

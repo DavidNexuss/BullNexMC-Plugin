@@ -2,6 +2,7 @@ package com.nsoft.bullnexmc;
 
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -19,6 +20,7 @@ public class Update implements CommandExecutor{
 	public static int PluginSize;
 	public static byte[] buffer;
 
+	//TODO: Add a command executor to change web for update
 	public Update() {
 		// TODO Auto-generated constructor stub
 	}
@@ -51,27 +53,17 @@ public class Update implements CommandExecutor{
 				SpigotPlugin.sendMessage(sender, "No hay actualizaciones disponibles!",2);
 			}else {
 				
-				SpigotPlugin.sendMessage(sender, "Actualización disponible! procediendo a descargarla",0);
-				buffer = new byte[input.available()];
-				int b = -1;
-				int n = 0;
-				
-				do {
+				SpigotPlugin.sendMessage(sender, "Actualización disponible! procediendo a descargarla y instalarla...",0);
+
+				try {
 					
-					b = input.read();
-					if(b != -1) {
-						
-						buffer[n] = (byte)b;
-						n++;
-					}
-				} while (b != -1);
-				
-				SpigotPlugin.sendMessage(sender, "Actualización descargada, instalando...",1);
-				FileOutputStream salida = new FileOutputStream("plugins/BullNexMC-1.0.jar");
-				salida.write(buffer);
-				salida.flush();
-				salida.close();
-				
+					downloadUsingStream(UrlName, "plugins/BullNexMC-1.0.jar");
+					
+				} catch (IOException e) {
+					
+					SpigotPlugin.sendMessage(sender, "Ha ocurrido un error!: " + e.getMessage(),2);
+					return true;
+				}
 				SpigotPlugin.sendMessage(sender, "Actualización instalada, reinicia el server con /reload",1);
 				
 				return true;
@@ -84,6 +76,20 @@ public class Update implements CommandExecutor{
 			
 		return true;
 	}
+	
+	private static void downloadUsingStream(String urlStr, String file) throws IOException{
+        URL url = new URL(urlStr);
+        BufferedInputStream bis = new BufferedInputStream(url.openStream());
+        FileOutputStream fis = new FileOutputStream(file);
+        byte[] buffer = new byte[1024];
+        int count=0;
+        while((count = bis.read(buffer,0,1024)) != -1)
+        {
+            fis.write(buffer, 0, count);
+        }
+        fis.close();
+        bis.close();
+    }
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		// TODO Auto-generated method stub

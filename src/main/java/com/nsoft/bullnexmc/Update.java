@@ -77,7 +77,7 @@ public class Update implements CommandExecutor{
 		return true;
 	}
 	
-	private static void downloadUsingStream(String urlStr, String file) throws IOException{
+	public static void downloadUsingStream(String urlStr, String file) throws IOException{
         URL url = new URL(urlStr);
         BufferedInputStream bis = new BufferedInputStream(url.openStream());
         FileOutputStream fis = new FileOutputStream(file);

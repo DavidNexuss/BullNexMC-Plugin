@@ -43,6 +43,14 @@ commands:
        description: Genera las bolas del dragon, caeran del cielo! (Solo SuperAdmins)
        permission: bullnexmc.update
        usage: /<command> <numero de bloques>
+    bn-download:
+       description: Descarga un plugin en la carpeta plugins (Solo SuperAdmins)
+       permission: bullnexmc.update
+       usage: /<command> <Url> <Plugin Name>
+    bn-remove:
+       description: Quita un plugin (Solo SuperAdmins)
+       permission: bullnexmc.update
+       usage: /<command> <Plugin Name>
 
 permissions:
     bullnexmc.update:

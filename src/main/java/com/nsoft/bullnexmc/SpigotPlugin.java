@@ -1,5 +1,6 @@
 package com.nsoft.bullnexmc;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
@@ -100,9 +101,30 @@ public class SpigotPlugin extends JavaPlugin implements Listener {
 		}
     	
     }
+    
+    private void createConfig() {
+        try {
+            if (!getDataFolder().exists()) {
+                getDataFolder().mkdirs();
+            }
+            File file = new File(getDataFolder(), "config.yml");
+            if (!file.exists()) {
+                getLogger().info("Config.yml not found, creating!");
+                saveDefaultConfig();
+            } else {
+                getLogger().info("Config.yml found, loading!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+
+    }
     @Override
     public void onEnable() {
         // Don't log enabling, Spigot does that for you automatically!
+    	
+    	createConfig();
     	
     	Update.PluginSize = checkSieze();
     	Update a = new Update();

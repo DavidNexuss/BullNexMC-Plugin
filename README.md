@@ -1,10 +1,10 @@
 # BullNexMC-Plugin 💵
-The BullNexMC Oficial Plugin
+The BullNexMC Oficial Plugin  
 
-Este es el plugin oficial de BullNexMC 🙂
+## Este es el plugin oficial de BullNexMC 🙂  
 
-Lista de tareas 💯
-☑️ Comando Freeze
-❎ Comando SuperSalto
-❎ Comando Insta TP
-❎ Sistema de bandas
+## Lista de tareas 💯  
+☑️ Comando Freeze  
+❎ Comando SuperSalto  
+❎ Comando Insta TP  
+❎ Sistema de bandas  

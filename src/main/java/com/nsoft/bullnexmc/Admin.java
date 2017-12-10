@@ -108,6 +108,34 @@ public class Admin {
 			return true;
 		}
 	}
+	/**
+	 * Comando para congelar jugadores
+	 * @author DavidNexuss
+	 */
+	static class Freeze extends MyComandExecutor{
+		
+		public Freeze(String name) {
+			super(name);
+		}
+		
+		@Override
+		public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+			// TODO Auto-generated method stub
+			 if(super.onCommand(sender, command, label, args)) {
+				 
+				 if(!sender.isOp()) { SpigotPlugin.NotOPMessage(sender); return true;}
+				 if(args.length != 1) { SpigotPlugin.sendMessage(sender, "Argumentos incorrectos",2);  return true;}
+				 
+				 Player p = SpigotPlugin.plugin.getServer().getPlayer(args[0]);
+				 
+				 if(p == null) {SpigotPlugin.sendMessage(sender, "Jugador no encontrado"); return true;}
+
+				 if(p.getWalkSpeed() == 1) p.setWalkSpeed(0);
+				 else p.setWalkSpeed(1);
+				 
+			 } return true;
+		}
+	}
 	static class BroadCast extends MyComandExecutor{
 
 		public BroadCast(String name) {

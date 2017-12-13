@@ -1,5 +1,7 @@
 package com.nsoft.bullnexmc.gang;
 
+import javax.naming.ldap.PagedResultsControl;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -66,6 +68,18 @@ public class Point extends Good{
 	
 	private void createStructure(Player p,Case c) {
 		
+		GangPlayer pl = Gang.getGangPlayer(p);
+		
+		if(c == Case.NOBODY) {
+			
+			if(pl!= null) {
+			
+				p.sendBlockChange(getLocation(), Material.WOOL, (byte) 1);
+				
+			}
+		}
+		else if(c == Case.ENEMY) {}
+		else if(c == Case.YOURS) {}
 	}
 	/**
 	 * Obtener punto

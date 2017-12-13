@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
 import com.nsoft.bullnexmc.SpigotPlugin;
 import static com.nsoft.bullnexmc.gang.Gang.*;
@@ -17,10 +18,10 @@ import static com.nsoft.bullnexmc.gang.Gang.*;
  */
 public class GangPlayer implements Field{
 	
-	OfflinePlayer p;			  /** Reflaja un objto {@link OfflinePlayer} del jugador*/
-	Mafia mafia;				  /** Acceso a la mafia del jugador {@link Mafia}*/
-	int lvl;
-	int xp;
+	private OfflinePlayer p;			  /** Reflaja un objto {@link OfflinePlayer} del jugador*/
+	private Mafia mafia;				  /** Acceso a la mafia del jugador {@link Mafia}*/
+	private int lvl;
+	private int xp;
 	private ArrayList<Float> pay; 
 	
 	public GangPlayer(String pName,Mafia m,int lvl,int xp) {
@@ -94,6 +95,17 @@ public class GangPlayer implements Field{
 	}
 	
 	/**
+	 * Devuelve el objeto {@link OfflinePlayer} que refleja este jugador
+	 * @return el jugador
+	 */
+	public OfflinePlayer getOfflinePlayer() {return p;}
+	
+	/**
+	 * Devuelve el objeto {@link Player} que refleja este jugador, si no esta conectado devuelve null
+	 * @return el jugador, null si no esta conectado
+	 */
+	public Player getPlayer() {return getOfflinePlayer().getPlayer();}
+	/**
 	 * @return Devuelve true si el jugador esta conectado
 	 */
 	public boolean isConnected() { return p.isOnline(); }
@@ -101,5 +113,17 @@ public class GangPlayer implements Field{
 	 * @return Devuelve el nombre del jugador
 	 */
 	public String getName() {return p.getName();}
+
+	/**
+	 * Devuelve el nivel del jugador
+	 * @return el nivel
+	 */
+	public float getLevel() { return lvl; }
+
+	/**
+	 * Devuelve la mafia de la que es participe, sinó esta en ninguna mafia devuelve null
+	 * @return el objeto mafia, o null sinó esta en ninguna
+	 */
+	public Mafia getMafia() { return mafia; }
 
 }

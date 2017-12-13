@@ -37,7 +37,11 @@ public class Gang {
 	
 	static FileConfiguration Data;
 	
+	static JavaPlugin plugin;
+	
 	static void init(FileConfiguration data, JavaPlugin p) {
+		
+		plugin = p;
 		
 		if(!setupEconomy()) {
 			
@@ -49,6 +53,35 @@ public class Gang {
 		load(Data.getConfigurationSection("gang"));
 		initCommands(p);
 	}
+	
+	/**
+	 * Transforma {@link OfflinePlayer} a {@link GangPlayer} si es posible, sinó devuelve null
+	 * @param Player el objeto {@link OfflinePlayer} que refleja el jugador deseado
+	 * @return Su objeto {@link GangPlayer}
+	 */
+	public static GangPlayer getGangPlayer(OfflinePlayer player) {
+		
+		for (GangPlayer p : players) {
+			if(p.getOfflinePlayer() == player) {
+				return p;
+			}
+		} return null;
+	}
+	/**
+	 * @see Gang#getGangPlayer(OfflinePlayer)
+	 * @param player
+	 * @return Su objeto {@link GangPlayer}
+	 */
+	public static GangPlayer getGangPlayer(Player player) {return getGangPlayer(plugin.getServer().getOfflinePlayer(player.getName()));}
+	
+	/**
+	 * @see Gang#getGangPlayer(OfflinePlayer)
+	 * @param player
+	 * @return Su objeto {@link GangPlayer}
+	 */
+	public static GangPlayer getGangPlayer(String player_name) {return getGangPlayer(plugin.getServer().getOfflinePlayer(player_name));}
+	
+	
 	
 	//TODO: All commands!
 	private static void initCommands(JavaPlugin p) {

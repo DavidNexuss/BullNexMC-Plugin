@@ -88,7 +88,7 @@ public class Mafia implements Field{
 				
 				for (int i = 0; i < text.length; i++) {
 					
-					SendMafiaMessage(pl.p.getPlayer(), text[i]);
+					SendMafiaMessage(pl.getPlayer(), text[i]);
 				}
 				
 			}
@@ -112,8 +112,8 @@ public class Mafia implements Field{
 			
 			if(pl.isConnected()) {
 				
-				SendMafiaMessage(pl.p.getPlayer(), "	  Tramitando cobro...");
-				SendMafiaMessage(pl.p.getPlayer(), "---------------------------------");
+				SendMafiaMessage(pl.getPlayer(), "	  Tramitando cobro...");
+				SendMafiaMessage(pl.getPlayer(), "---------------------------------");
 			}
 		}
 		for (Point point : ownedPoints) {
@@ -139,11 +139,11 @@ public class Mafia implements Field{
 				}
 				
 				
-				SendMafiaMessage(point.getOperator().p.getPlayer(), "Beneficios por ser operador de " + point.getName() + " recibes un " + ChatColor.GREEN + "30% " + ChatColor.DARK_PURPLE + "del total.");
-				SendMafiaMessage(point.getOperator().p.getPlayer(), "Recibes " + ChatColor.GREEN + pay*.3f + eco.currencyNamePlural());
+				SendMafiaMessage(point.getOperator().getPlayer(), "Beneficios por ser operador de " + point.getName() + " recibes un " + ChatColor.GREEN + "30% " + ChatColor.DARK_PURPLE + "del total.");
+				SendMafiaMessage(point.getOperator().getPlayer(), "Recibes " + ChatColor.GREEN + pay*.3f + eco.currencyNamePlural());
 				
 				point.getOperator().pay(pay*.3f);
-				Gang.eco.depositPlayer(point.getOperator().p, pay * .3f);
+				Gang.eco.depositPlayer(point.getOperator().getOfflinePlayer(), pay * .3f);
 			
 			}
 			
@@ -159,18 +159,18 @@ public class Mafia implements Field{
 			
 			for (GangPlayer pl : players) {
 			
-				total += pl.lvl;
+				total += pl.getLevel();
 			}
 			
 			for (GangPlayer pl : players) {
 				
 				if(!pl.isConnected()) continue;
 				
-				float payI = rp * (pl.lvl/total);
+				float payI = rp * (pl.getLevel()/total);
 				pl.pay(payI);
-				Gang.eco.depositPlayer(pl.p,payI);
-				SendMafiaMessage(pl.p.getPlayer(), "Recibes un " + ChatColor.GREEN + "(" + (pl.lvl/total)*100 + "%)" +ChatColor.DARK_PURPLE + " del 40% a repartir",
-						"Recibes un " + ChatColor.GREEN + (.4f * (pl.lvl/total))*100 + "% " + ChatColor.DARK_PURPLE + "recibes " + ChatColor.GREEN + payI + eco.currencyNamePlural());
+				Gang.eco.depositPlayer(pl.getOfflinePlayer(),payI);
+				SendMafiaMessage(pl.getPlayer(), "Recibes un " + ChatColor.GREEN + "(" + (pl.getLevel()/total)*100 + "%)" +ChatColor.DARK_PURPLE + " del 40% a repartir",
+						"Recibes un " + ChatColor.GREEN + (.4f * (pl.getLevel()/total))*100 + "% " + ChatColor.DARK_PURPLE + "recibes " + ChatColor.GREEN + payI + eco.currencyNamePlural());
 				
 			}
 		}
@@ -179,14 +179,14 @@ public class Mafia implements Field{
 			
 			if(pl.isConnected()) {
 				
-				SendMafiaMessage(pl.p.getPlayer(), "Sumatorio de todos los pagos: ");
+				SendMafiaMessage(pl.getPlayer(), "Sumatorio de todos los pagos: ");
 				String[] list = pl.retrieveList();
 				
 				for (String string : list) {
-					SendMafiaMessage(pl.p.getPlayer(), "	" + string);
+					SendMafiaMessage(pl.getPlayer(), "	" + string);
 				}
 				
-				SendMafiaMessage(pl.p.getPlayer(), "Total " + pl.Total());
+				SendMafiaMessage(pl.getPlayer(), "Total " + pl.Total());
 				pl.clear();
 			}
 		}
@@ -204,7 +204,7 @@ public class Mafia implements Field{
 	}
 	public boolean addPlayer(GangPlayer p,boolean anounce) {
 		
-		if(p.mafia != null) {
+		if(p.getMafia() != null) {
 			
 			return false;
 		}

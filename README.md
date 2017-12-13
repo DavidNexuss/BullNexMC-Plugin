@@ -8,6 +8,7 @@ The BullNexMC Oficial Plugin
 ❎ Comando SuperSalto  
 ❎ Comando Insta TP  
 ❎ Sistema de bandas  
+❎ Webhook para la web de BullNexRP
 
 ### Como añadir una tarea?  
 Si quieres que añada una tarea, o tienes una sugerencia para el plugin tan solo ve al apartado de **Issues** y añade un issue  

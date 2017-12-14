@@ -22,7 +22,7 @@ public class Update implements CommandExecutor{
 
 	//TODO: Add a command executor to change web for update
 	public Update() {
-		// TODO Auto-generated constructor stub
+
 	}
 	public boolean sendSize(CommandSender sender) {
 		
@@ -69,7 +69,7 @@ public class Update implements CommandExecutor{
 				return true;
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+
 			SpigotPlugin.sendMessage(sender, e.getMessage(),2);
 			return true;
 		}
@@ -92,8 +92,7 @@ public class Update implements CommandExecutor{
     }
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		// TODO Auto-generated method stub
-		
+
 		String Command = command.getName().toLowerCase();
 		if(Command.equals("update")) return update(sender);
 		if(Command.equals("bn-size")) return sendSize(sender);

@@ -95,7 +95,7 @@ public class SpigotPlugin extends JavaPlugin implements Listener {
 			
     	
     	} catch (Exception e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 			return -1;
 		}

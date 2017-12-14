@@ -12,5 +12,6 @@ public interface Field{
 	 * Guarda el objeto
 	 * @param save El objeto {@link ConfigurationSection} que refleja la sección del archivo YML donde se quiere guardar el objeto
 	 */
+	//TODO: Remove this public modifier because scurity problems
 	public void save(ConfigurationSection save);
 }

@@ -95,12 +95,12 @@ public class DBall {
 
 		public radar(String name) {
 			super(name);
-			// TODO Auto-generated constructor stub
+
 		}
 		
 		@Override
 		public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-			// TODO Auto-generated method stub
+
 			if(!super.onCommand(sender, command, label, args)) return true;
 			
 				
@@ -134,12 +134,12 @@ public class DBall {
 
 		public BetaDragonBalls(String name) {
 			super(name);
-			// TODO Auto-generated constructor stub
+
 		}
 		
 		@Override
 		public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-			// TODO Auto-generated method stub
+
 			if(!super.onCommand(sender, command, label, args)) return true;
 			
 			

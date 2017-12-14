@@ -66,17 +66,15 @@ public class Point extends Good{
 	}
 	private enum Case{YOURS,ENEMY,NOBODY}
 	
+	//TODO: Finish this infernal method
 	private void createStructure(Player p,Case c) {
 		
 		GangPlayer pl = Gang.getGangPlayer(p);
 		
 		if(c == Case.NOBODY) {
 			
-			if(pl!= null) {
 			
-				p.sendBlockChange(getLocation(), Material.WOOL, (byte) 1);
-				
-			}
+			p.sendBlockChange(getLocation(), Material.WOOL, (byte) 1);
 		}
 		else if(c == Case.ENEMY) {}
 		else if(c == Case.YOURS) {}
@@ -150,7 +148,7 @@ public class Point extends Good{
 	
 	@Override
 	public float getFinalBalance() {
-		// TODO Auto-generated method stub
+
 		if(operator.isConnected())
 			return super.getFinalBalance()*bonus;
 		else

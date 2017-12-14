@@ -12,9 +12,9 @@ public abstract class MyComandExecutor implements CommandExecutor {
 		commandname = name;
 	}
 	
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		// TODO Auto-generated method stub
 		
 		if(commandname.equals(command.getName().toLowerCase()))
 		return true;

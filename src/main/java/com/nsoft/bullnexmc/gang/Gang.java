@@ -15,6 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Horse.Color;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -53,9 +54,22 @@ public class Gang {
 		load(Data.getConfigurationSection("gang"));
 		initCommands(p);
 	}
-	
 	/**
-	 * Transforma {@link OfflinePlayer} a {@link GangPlayer} si es posible, sinó devuelve null
+	 * Devuelve una mafia por su nombre
+	 * @param name el nombre de la mafia
+	 * @return la mafia, si no hay ninguna mafia con este nombre, devuelve null
+	 */
+	public static Mafia getMafia(String name) {
+		
+		for (Mafia mafia : mafias) {
+			if(mafia.getName().equals(name)) {
+				return mafia;
+			}
+		}
+		return null;
+	}
+	/**
+	 * Transforma {@link OfflinePlayer} a {@link GangPlayer} si es posible, sinó crea un nuevo perfil
 	 * @param Player el objeto {@link OfflinePlayer} que refleja el jugador deseado
 	 * @return Su objeto {@link GangPlayer}
 	 */
@@ -65,7 +79,11 @@ public class Gang {
 			if(p.getOfflinePlayer() == player) {
 				return p;
 			}
-		} return null;
+		}
+		
+		GangPlayer a = new GangPlayer(player.getName(), null, 1, 0);
+		getPlayers().add(a);
+		return a;
 	}
 	/**
 	 * @see Gang#getGangPlayer(OfflinePlayer)
@@ -86,23 +104,66 @@ public class Gang {
 	//TODO: All commands!
 	private static void initCommands(JavaPlugin p) {
 		
-		p.getCommand("mafia-create").setExecutor(new MyComandExecutor("mafia-create") {
+		p.getCommand("mafia-ban").setExecutor(new MyComandExecutor("mafia-ban") {
 			
 			@Override
 			public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 				// TODO Auto-generated method stub
-				if(super.onCommand(sender, command, label, args)) {
-					
-					if(!sender.isOp()) {
-						
-						SpigotPlugin.NotOPMessage(sender);
-					}else {
-						
-
-					}
-				}
+				if(!super.onCommand(sender, command, label, args)) return true;
 				
-				return false;
+				if(args.length != 1 ) {SpigotPlugin.sendMessage(sender, "Argumentos incorrectos",2); return true;}
+				if(!sender.isOp()) {SpigotPlugin.sendMessage(sender, "No tienes permiso para ejecutar este comando",2); return true;}
+				
+				getGangPlayer(args[0]).banProfile();
+				return true;
+			}
+		});
+		
+		p.getCommand("mafia-unban").setExecutor(new MyComandExecutor("mafia-unban") {
+			
+			@Override
+			public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+				// TODO Auto-generated method stub
+				if(!super.onCommand(sender, command, label, args)) return true;
+				
+				if(args.length != 1 ) {SpigotPlugin.sendMessage(sender, "Argumentos incorrectos",2); return true;}
+				if(!sender.isOp()) {SpigotPlugin.sendMessage(sender, "No tienes permiso para ejecutar este comando",2); return true;}
+				
+				getGangPlayer(args[0]).unBanProfile();
+				return true;
+			}
+		});
+		p.getCommand("mafia-create").setExecutor(new MyComandExecutor("mafia-create") {
+			
+			@Override
+			public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+
+				if(!super.onCommand(sender, command, label, args)) return true;
+					
+					if(!sender.isOp()) SpigotPlugin.NotOPMessage(sender); else {
+						
+						if(args.length != 2) { SpigotPlugin.sendMessage(sender, "Argumentos incorrectos",2);return true;}
+						if(ChatColor.valueOf(args[1]) == null) {SpigotPlugin.sendMessage(sender, "Color invalido: " + args[1],2); return true;} //TODO: Check Enum.valueOf()
+						
+						Mafia m = new Mafia(args[0], ChatColor.valueOf(args[1]), 0);
+					}
+				
+				return true;
+			}
+		});
+		
+		p.getCommand("mafia-join").setExecutor(new MyComandExecutor("mafia-join") {
+			
+			@Override
+			public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+				if(!super.onCommand(sender, command, label, args)) return true;
+				
+				if(args.length != 1) {SpigotPlugin.sendMessage(sender, "Argumentos incorrectos",2); return true;}
+				
+				GangPlayer p = getGangPlayer(sender.getName());
+
+				getMafia(args[0]).askJoin(p);
+				return true;
 			}
 		});
 	}

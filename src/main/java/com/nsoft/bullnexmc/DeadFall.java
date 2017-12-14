@@ -37,12 +37,12 @@ public class DeadFall {
 
 		public BoltCommand(String name) {
 			super(name);
-			// TODO Auto-generated constructor stub
+
 		}
 		
 		@Override
 		public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-			// TODO Auto-generated method stub
+
 			if(!super.onCommand(sender, command, label, args)) return true;
 			
 			if(!sender.isOp()) {
@@ -74,7 +74,7 @@ public class DeadFall {
 
 		public DropCommand(String name) {
 			super(name);
-			// TODO Auto-generated constructor stub
+
 		}
 		
 		@Override

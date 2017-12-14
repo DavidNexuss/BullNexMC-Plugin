@@ -21,12 +21,11 @@ public class Admin {
 
 		public RemovePlugin(String name) {
 			super(name);
-			// TODO Auto-generated constructor stub
 		}
 		
 		@Override
 		public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-			// TODO Auto-generated method stub
+
 			if(!super.onCommand(sender, command, label, args))return true;
 			
 			if(!sender.isOp()) {
@@ -56,12 +55,11 @@ public class Admin {
 
 		public Download(String name) {
 			super(name);
-			// TODO Auto-generated constructor stub
 		}
 		
 		@Override
 		public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-			// TODO Auto-generated method stub
+
 			 if(!super.onCommand(sender, command, label, args)) return true;
 			 
 			 if(!sender.isOp()) {
@@ -79,7 +77,7 @@ public class Admin {
 				Update.downloadUsingStream(args[0], "plugins/" + args[1] + ".jar");
 			}
 			 catch (IOException e) {
-				// TODO Auto-generated catch block
+
 				SpigotPlugin.sendMessage(sender, e.getMessage());
 				return true;
 				
@@ -91,12 +89,11 @@ public class Admin {
 
 		public Spawn(String name) {
 			super(name);
-			// TODO Auto-generated constructor stub
 		}
 		
 		@Override
 		public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-			// TODO Auto-generated method stub
+
 			if(!super.onCommand(sender, command, label, args)) return true;
 			
 			if(sender instanceof Player) {
@@ -120,7 +117,7 @@ public class Admin {
 		
 		@Override
 		public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-			// TODO Auto-generated method stub
+
 			 if(super.onCommand(sender, command, label, args)) {
 				 
 				 if(!sender.isOp()) { SpigotPlugin.NotOPMessage(sender); return true;}
@@ -140,12 +137,11 @@ public class Admin {
 
 		public BroadCast(String name) {
 			super(name);
-			// TODO Auto-generated constructor stub
 		}
 		
 		@Override
 		public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-			// TODO Auto-generated method stub
+
 			if(!super.onCommand(sender, command, label, args)) return true;
 			
 			if(!sender.isOp()) {

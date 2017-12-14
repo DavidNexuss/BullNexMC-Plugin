@@ -10,12 +10,12 @@ public class WriteFile extends MyComandExecutor{
 
 	public WriteFile(String name) {
 		super(name);
-		// TODO Auto-generated constructor stub
+
 	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		// TODO Auto-generated method stub
+
 		if(!super.onCommand(sender, command, label, args)) return false;
 		
 		
@@ -27,7 +27,7 @@ public class WriteFile extends MyComandExecutor{
 			salida.close();
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+
 			sender.sendMessage("Error: " + e.getMessage());
 		}
 		

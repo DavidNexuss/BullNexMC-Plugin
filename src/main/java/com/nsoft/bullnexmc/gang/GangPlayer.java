@@ -18,18 +18,25 @@ import static com.nsoft.bullnexmc.gang.Gang.*;
  */
 public class GangPlayer implements Field{
 	
+	private static int maxjoin = 5;
 	private OfflinePlayer p;			  /** Reflaja un objto {@link OfflinePlayer} del jugador*/
 	private Mafia mafia;				  /** Acceso a la mafia del jugador {@link Mafia}*/
 	private int lvl;
 	private int xp;
 	private ArrayList<Float> pay; 
 	
+	private int joinCount = 0;
+	
+	private boolean masterBan = false;
 	public GangPlayer(String pName,Mafia m,int lvl,int xp) {
 		
-		this(SpigotPlugin.plugin.getServer().getOfflinePlayer(pName),m);
+		this.p = SpigotPlugin.plugin.getServer().getOfflinePlayer(pName);
+		this.mafia = m;
+		
 		if(lvl == 0) lvl = 1;
 		this.lvl = lvl;
 		this.xp = xp;
+		
 		pay = new ArrayList<>();
 		
 	}
@@ -42,7 +49,7 @@ public class GangPlayer implements Field{
 		save.set("xp", xp);
 	}
 	
-	public void pay(float p) {
+	void pay(float p) {
 		
 		pay.add(p);
 	}
@@ -57,7 +64,7 @@ public class GangPlayer implements Field{
 		}
 		return x;
 	}
-	public void clear() {
+	void clear() {
 		
 		pay.clear();
 	}
@@ -77,19 +84,13 @@ public class GangPlayer implements Field{
 		}
 		return list;
 	}
-	public void addXP(float nxp) {
+	void addXP(float nxp) {
 		
 		xp+= nxp;
 		lvl = (int) (Math.sqrt(xp) + 1);
 	}
-	public GangPlayer(OfflinePlayer p, Mafia m) {
-		
-		
-		this.mafia = m;
-		this.p = p;
-		
-	}
-	public void setMafia(Mafia m) {
+	
+	void setMafia(Mafia m) {
 		
 		mafia = m;
 	}
@@ -106,9 +107,10 @@ public class GangPlayer implements Field{
 	 */
 	public Player getPlayer() {return getOfflinePlayer().getPlayer();}
 	/**
+	 * Como método de seguridad se puede desactivar el perfil del jugador si este comete infracciones
 	 * @return Devuelve true si el jugador esta conectado
 	 */
-	public boolean isConnected() { return p.isOnline(); }
+	public boolean isConnected() { return p.isOnline() || isAble();}
 	/**
 	 * @return Devuelve el nombre del jugador
 	 */
@@ -126,4 +128,56 @@ public class GangPlayer implements Field{
 	 */
 	public Mafia getMafia() { return mafia; }
 
+	/**
+	 * Devuelve true si el jugador es partícipe en una mafia, false sinó lo es
+	 * @return el estado del jugador
+	 */
+	public boolean isInMafia() {return mafia != null;}
+	
+	
+	void tryJoin() {
+		joinCount ++;
+	}
+	
+	void resetJoinCount() {
+		joinCount =0;
+	}
+	
+	/**
+	 * Establece el limite de veces que el jugador puede pedir ser de una mafia, 
+	 * por defecto el máximo es de 5, si lo sobrepasa se le suspende el perfil {@link #banProfile()}
+	 * 
+	 * @param new_max_join El nuevo límite
+	 */
+	public void setMaxJoin(int new_max_join) {
+		
+		maxjoin = new_max_join;
+	}
+	private boolean isAble() {
+		
+		return (joinCount > maxjoin ? false : true ) || !masterBan;
+	}
+	
+	/**
+	 * Suspende el perfil de mafioso del jugador, para todo el plugin y todo lo referido a las mafias
+	 * el jugador estará desconectado
+	 */
+	public void banProfile() {
+		masterBan = true;
+	}
+	
+	/**
+	 * Desbanea el perfil {@link #banProfile()}
+	 */
+	public void unBanProfile() {
+		masterBan = false;
+	}
+	
+	/**
+	 * Devuelve el status del jugador
+	 * @return true si el perfil del jugador esta baneado
+	 */
+	public boolean isProfileBanned() {
+		return masterBan;
+	}
 }

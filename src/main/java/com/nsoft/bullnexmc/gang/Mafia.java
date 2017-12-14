@@ -222,4 +222,15 @@ public class Mafia implements Field{
 		SpigotPlugin.BroadCast(ChatColor.GOLD + "[" + ChatColor.GREEN + "BullNex Mafias" + ChatColor.GOLD + "]" + ChatColor.DARK_PURPLE + " " +
 							  p.getName() + " se ha unido a la mafia " + name);
 	}
+	/**
+	 * Devuelve el nombre de la mafia
+	 * @return el nombre
+	 */
+	public String getName() {return name;}
+	
+	//TODO: Ask schedule
+	public void askJoin(GangPlayer p) {
+		
+		p.tryJoin();
+	} 
 }

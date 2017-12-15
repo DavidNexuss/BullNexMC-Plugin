@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
-import org.hamcrest.core.Is;
-
 import com.nsoft.bullnexmc.SpigotPlugin;
 import static com.nsoft.bullnexmc.gang.Gang.*;
 
@@ -23,6 +20,7 @@ public class Mafia implements Field{
 	public int Balance;
 	public ChatColor color;
 	public ArrayList<GangPlayer> players;
+	public ArrayList<GangPlayer> aplyForGangs = new ArrayList<>();
 	public ArrayList<Point> ownedPoints;
 	
 	@Override
@@ -228,9 +226,61 @@ public class Mafia implements Field{
 	 */
 	public String getName() {return name;}
 	
-	//TODO: Ask schedule
-	public void askJoin(GangPlayer p) {
+	public GangPlayer getAspirantGang(String name) {
 		
+		for (GangPlayer gang : aplyForGangs) {
+			
+			if(gang.getName().equals(name)) {
+				
+				return gang;
+			}
+		}
+		
+		return null;
+	}
+	public boolean removeOperator(GangPlayer player) {
+		
+		boolean isOperator = false;
+		if(player.getMafia() != this) return false;
+		
+		for (Point p : getPoints()) {	
+			if(p.getOperator() == player) {
+				
+				p.quitOperator();
+				isOperator = true;
+			}
+		}
+		return isOperator;
+	}
+	public boolean leaveMafia(GangPlayer p) {
+		
+		if(p.getMafia() != this) return false;
+		
+		getPlayers().remove(p);
+		removeOperator(p);
+		p.setMafia(null);
+		
+		return true;
+		
+	}
+	//TODO: Ask schedule
+	public boolean askJoin(GangPlayer p) {
+		
+		if(p.getMafia() != this || !p.isConnected() || aplyForGangs.contains(p)) return false;
 		p.tryJoin();
-	} 
+		aplyForGangs.add(p);
+		return true;
+	}
+	
+	public boolean acceptJoin(String personaName) {
+		
+		GangPlayer p = getAspirantGang(personaName);
+		if(p == null || p.isInMafia()) return false;
+		
+		getPlayers().add(p);
+		
+		return true;
+	}
+	
+	public static enum Protocol{ALREADY_IN_MAFIA}
 }

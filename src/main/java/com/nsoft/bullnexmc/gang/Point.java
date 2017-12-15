@@ -1,7 +1,5 @@
 package com.nsoft.bullnexmc.gang;
 
-import javax.naming.ldap.PagedResultsControl;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -146,9 +144,18 @@ public class Point extends Good{
 		return operator;
 	}
 	
+	public void quitOperator() {
+		
+		operator = null;
+	}
+	
+	public boolean isAvaible() {
+		
+		return getMafia() == null && getOperator() == null;
+	}
 	@Override
 	public float getFinalBalance() {
-
+		
 		if(operator.isConnected())
 			return super.getFinalBalance()*bonus;
 		else

@@ -1,31 +1,19 @@
 package com.nsoft.bullnexmc.gang;
 
-import java.nio.channels.GatheringByteChannel;
-import java.sql.Savepoint;
 import java.util.ArrayList;
-import java.util.HashMap;
-
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Horse.Color;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.avaje.ebeaninternal.util.ValueUtil;
 import com.nsoft.bullnexmc.MyComandExecutor;
 import com.nsoft.bullnexmc.SpigotPlugin;
 
-import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 
 public class Gang {
@@ -96,9 +84,17 @@ public class Gang {
 	 * @see Gang#getGangPlayer(OfflinePlayer)
 	 * @param player
 	 * @return Su objeto {@link GangPlayer}
+	 * @throws Exception si no existe ningun jugador con ese nombre
 	 */
-	public static GangPlayer getGangPlayer(String player_name) {return getGangPlayer(plugin.getServer().getOfflinePlayer(player_name));}
-	
+	public static GangPlayer getGangPlayer(String player_name) throws Exception {
+		
+		if(plugin.getServer().getOfflinePlayer(player_name) != null) {
+			
+			return getGangPlayer(plugin.getServer().getOfflinePlayer(player_name));
+		}else
+			throw Errors.userNotFoundException(player_name);
+		
+	}
 	
 	
 	//TODO: All commands!
@@ -108,13 +104,15 @@ public class Gang {
 			
 			@Override
 			public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-				// TODO Auto-generated method stub
+				
 				if(!super.onCommand(sender, command, label, args)) return true;
 				
 				if(args.length != 1 ) {SpigotPlugin.sendMessage(sender, "Argumentos incorrectos",2); return true;}
 				if(!sender.isOp()) {SpigotPlugin.sendMessage(sender, "No tienes permiso para ejecutar este comando",2); return true;}
 				
-				getGangPlayer(args[0]).banProfile();
+				try 				{	getGangPlayer(args[0]).banProfile();	}
+				catch (Exception e) {	Errors.handleException(sender, e); 		}
+				
 				return true;
 			}
 		});
@@ -123,13 +121,15 @@ public class Gang {
 			
 			@Override
 			public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-				// TODO Auto-generated method stub
+				
 				if(!super.onCommand(sender, command, label, args)) return true;
 				
 				if(args.length != 1 ) {SpigotPlugin.sendMessage(sender, "Argumentos incorrectos",2); return true;}
 				if(!sender.isOp()) {SpigotPlugin.sendMessage(sender, "No tienes permiso para ejecutar este comando",2); return true;}
 				
-				getGangPlayer(args[0]).unBanProfile();
+				try 				{	getGangPlayer(args[0]).unBanProfile();	}
+				catch (Exception e) {	Errors.handleException(sender, e); 		}
+				
 				return true;
 			}
 		});
@@ -160,9 +160,18 @@ public class Gang {
 				
 				if(args.length != 1) {SpigotPlugin.sendMessage(sender, "Argumentos incorrectos",2); return true;}
 				
-				GangPlayer p = getGangPlayer(sender.getName());
+				try {
+					
+					GangPlayer p = getGangPlayer(sender.getName());
+					getMafia(args[0]).askJoin(p);
+				
+				} catch (Exception e) {
+					
+					Errors.handleException(sender, e);
+					return true;
+				}
 
-				getMafia(args[0]).askJoin(p);
+				
 				return true;
 			}
 		});

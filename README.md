@@ -8,8 +8,21 @@ The BullNexMC Oficial Plugin
 ❎ Comando SuperSalto  
 ❎ Comando Insta TP  
 ❎ Sistema de bandas  
-❎ Webhook para la web de BullNexRP
-
+    ❎ Protocolos  
+        ❎ compra/venta de bienes  
+        ☑️ Union y salida de una banda  
+        ❎ NewLifeRP  
+    ❎ Comandos  
+        ❎ Comandos de bandas  
+        ❎ Comandos de admin  
+    ❎ Sistema de bienes  
+        ❎ Locales  
+            ❎ Estructura de locales  
+        ❎ Pisos francos  
+    ❎ Seguridad del plugin  
+    ❎ Sistema de autoguardado  
+❎ Webhook para la web de BullNexRP  
+  
 ### Como añadir una tarea?  
 Si quieres que añada una tarea, o tienes una sugerencia para el plugin tan solo ve al apartado de **Issues** y añade un issue  
 con el siguiente formato:  

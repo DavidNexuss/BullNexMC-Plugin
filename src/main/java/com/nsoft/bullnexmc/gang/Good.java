@@ -12,6 +12,9 @@ public abstract class Good implements Field {
 	private String name;
 	private float pay;
 	
+	private Mafia m;
+	private GangPlayer operator;
+	
 	/**
 	 * Constructor para crear un nuevo bien
 	 * @param name El nombre del objeto
@@ -27,25 +30,27 @@ public abstract class Good implements Field {
 	 * Para modificar su valor se tiene que sobreescribir {@link #getFinalBalance() getFinalBalance}
 	 * @return el balance
 	 */
-	public final float getBalance() {return pay;};
+	public final float getBaseBalance() {return pay;};
 	
 	/**
 	 * Devuelve el nombre del objeto
 	 * @return el nombre
 	 */
-	public String getName() {return name;};
+	public String getName() {return ChatColor.GREEN + name + ChatColor.DARK_PURPLE;};
 	
 	/**
 	 * Devuelve el balance neto/final del objeto, sean beneficios o coste
 	 * Se puede sobreescribir según las necesidades
 	 * @return el balance final
 	 */
-	public float getFinalBalance() {return getBalance();}
+	public float getFinalBalance() {return getBaseBalance();}
+	
 	@Override
 	public void save(ConfigurationSection save) {
 		
 		save.set("name", name);
 		save.set("pay", pay);
+		save.set("operator", operator.getName());
 	}
 	
 	/**
@@ -63,4 +68,73 @@ public abstract class Good implements Field {
 		else
 			return "" + ChatColor.RED + getFinalBalance() + Gang.eco.currencyNamePlural();
 	}
+	
+	/**
+	 * Obtener punto
+	 * @param m La mafia
+	 * @param p El jugador
+	 */
+	public void own(Mafia m,GangPlayer p) {
+		
+		this.m = m;
+		this.operator = p;
+		
+		getMafia().broadcast(getType() + " " + getName() + " ha sido comprado/a por tu mafia");
+		
+	}
+	
+	public void setFree() {
+		
+		getMafia().broadcast(getType() + " " + getName() + " ha sido liberado!");
+		this.m = null;
+		this.operator = null;
+	}
+	
+	public void setFreeAndOwn(Mafia m,GangPlayer p) {
+		
+		setFree();
+		own(m, p);
+	}
+	/**
+	 * @return the mafia
+	 */
+	public Mafia getMafia() {
+		return m;
+	}
+	
+	/**
+	 * @return true si este local pertenece ya pertenece a una mafia
+	 */
+	public final boolean isOwned() {return getMafia() == null;}
+
+	public void setOperator(GangPlayer player) {
+		
+		if(getMafia().isIn(player.getName())) {
+			
+			this.operator = player;
+		}
+	}
+	
+	public abstract String getType();
+	/**
+	 * @return the operator
+	 */
+	public GangPlayer getOperator() {
+		return operator;
+	}
+	
+	public void quitOperator() {
+		
+		operator = null;
+		getMafia().broadcast("El operador de " + getName() + " ha sido revocado de sus funciones!");
+	}
+	/**
+	 * @return
+	 */
+	public boolean isAvaible() {
+		
+		return isOwned();
+	};
+	
+	public float getBuyPrice() { return Math.abs(pay)*100;}
 }

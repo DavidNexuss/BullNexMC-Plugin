@@ -20,9 +20,13 @@ public class Gang {
 
 	static Economy eco = null; 
 	
-	static ArrayList<Point> points;
+	static ArrayList<Good> objects;
+	
+		static ArrayList<Point> points;
+	
 	static ArrayList<GangPlayer> players;
 	static ArrayList<Mafia> mafias;
+	
 	
 	static FileConfiguration Data;
 	

@@ -17,7 +17,7 @@ import static com.nsoft.bullnexmc.gang.Gang.*;
 public class Mafia implements Field{
 	
 	public String name;
-	public int Balance;
+	private int Balance;
 	public ChatColor color;
 	public ArrayList<GangPlayer> players;
 	public ArrayList<GangPlayer> aplyForGangs = new ArrayList<>();
@@ -116,7 +116,7 @@ public class Mafia implements Field{
 		}
 		for (Point point : ownedPoints) {
 			
-			float pay = point.getBalance();
+			float pay = point.getBaseBalance();
 			String bonus= ChatColor.GRAY + "(0.00%)";
 			
 			sendToAll("Beneficios de " + point.getName() + ":",
@@ -215,6 +215,16 @@ public class Mafia implements Field{
 		return true;
 	}
 	
+	public void broadcast(String string) {
+
+		for (GangPlayer player : getPlayers()) {
+			
+			if(player.isConnected()) {
+				
+				player.getPlayer().sendMessage(ChatColor.GREEN + "[" + getName() + "] " + ChatColor.DARK_PURPLE + string);
+			}
+		}
+	}
 	public void announceJoint(GangPlayer p) {
 		
 		SpigotPlugin.BroadCast(ChatColor.GOLD + "[" + ChatColor.GREEN + "BullNex Mafias" + ChatColor.GOLD + "]" + ChatColor.DARK_PURPLE + " " +
@@ -254,7 +264,7 @@ public class Mafia implements Field{
 	}
 	public boolean leaveMafia(GangPlayer p) {
 		
-		if(p.getMafia() != this) return false;
+		if(p.getMafia() != this || !p.isConnected()) return false;
 		
 		getPlayers().remove(p);
 		removeOperator(p);
@@ -272,15 +282,45 @@ public class Mafia implements Field{
 		return true;
 	}
 	
+	//TODO: La gente que no este conectada deberia poder ser aceptada?? linea 291
+	/**
+	 * Acepta la unión de un nuevo miembro a la mafia
+	 * Devolvera false si:
+	 * 
+	 * 		Si no hay ningun jugador con el nombre especificado que este en la lista
+	 * 		Si ese jugador, por error, ya este en una mafia, se borrara su nombre de la lista
+	 * 
+	 * @param personaName el nombre de la persona
+	 * @return true si todo funciona bien
+	 */
 	public boolean acceptJoin(String personaName) {
 		
 		GangPlayer p = getAspirantGang(personaName);
-		if(p == null || p.isInMafia()) return false;
+		if(p == null) return false;
 		
+		if(p.isInMafia() || !p.isConnected()) {
+			
+			aplyForGangs.remove(p);
+			return false;
+		}
 		getPlayers().add(p);
 		
 		return true;
 	}
 	
+	public void buy(Good object,GangPlayer player) {
+		
+		if(player.isConnected() && object.isAvaible()) 
+			
+			if(getBalance() > object.getBaseBalance()) {
+				
+				object.own(this, player);
+			}
+		
+	}
+	
+	public int getBalance() {return Balance;}
 	public static enum Protocol{ALREADY_IN_MAFIA}
+	
+	
 }

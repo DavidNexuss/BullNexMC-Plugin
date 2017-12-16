@@ -13,14 +13,13 @@ import org.bukkit.entity.Player;
  */
 public class Point extends Good{
 	
+	@Override public String getType() {	return "El Local";	}
+	
 	static final float range = 0.2f;
 	private Material displayItem;
 	private float bonus;
 	
 	private Location loc;
-	
-	private Mafia m;
-	private GangPlayer operator;
 	
 	public Point(float defaultPay, String name, String displayItem, float bonus,Location loc) {
 		
@@ -37,7 +36,6 @@ public class Point extends Good{
 		super.save(save);
 		save.set("display", displayItem.name());
 		save.set("bonus", bonus);
-		save.set("operator", operator.getName());
 		save.set("location.x", loc.getBlockX());
 		save.set("location.y", loc.getBlockY());
 		save.set("location.z", loc.getBlockZ());
@@ -77,17 +75,7 @@ public class Point extends Good{
 		else if(c == Case.ENEMY) {}
 		else if(c == Case.YOURS) {}
 	}
-	/**
-	 * Obtener punto
-	 * @param m La mafia
-	 * @param p El jugador
-	 */
-	public void own(Mafia m,GangPlayer p) {
-		
-		this.m = m;
-		this.operator = p;
-		
-	}
+	
 
 	public void aplyDefaultAddition() {aplyAddition(0.02f);}
 	public void aplyAddition(float add) {
@@ -104,11 +92,22 @@ public class Point extends Good{
 		if(bonus < 0)
 			bonus = 0;
 	}
-	public void setOperator(GangPlayer p) {
+
+	@Override
+	public float getFinalBalance() {
 		
-		this.operator = p;
+		if(getOperator().isConnected())
+			return super.getFinalBalance()*bonus;
+		else
+			return super.getFinalBalance();
 	}
 
+	@Override
+	public boolean isAvaible() {
+		
+		return super.isAvaible() && getOperator() == null;
+	}
+	
 	/**
 	 * @return the displayItem
 	 */
@@ -129,42 +128,6 @@ public class Point extends Good{
 	public Location getLocation() {
 		return loc;
 	}
-
-	/**
-	 * @return the mafia
-	 */
-	public Mafia getMafia() {
-		return m;
-	}
-
-	/**
-	 * @return the operator
-	 */
-	public GangPlayer getOperator() {
-		return operator;
-	}
-	
-	public void quitOperator() {
-		
-		operator = null;
-	}
-	
-	public boolean isAvaible() {
-		
-		return getMafia() == null && getOperator() == null;
-	}
-	@Override
-	public float getFinalBalance() {
-		
-		if(operator.isConnected())
-			return super.getFinalBalance()*bonus;
-		else
-			return super.getFinalBalance();
-	}
-	/**
-	 * @return true si este local pertenece ya pertenece a una mafia
-	 */
-	public boolean isOwned() {return m == null;}
 
 	
 }

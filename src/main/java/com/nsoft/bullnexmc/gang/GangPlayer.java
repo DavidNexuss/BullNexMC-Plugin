@@ -180,4 +180,18 @@ public class GangPlayer implements Field{
 	public boolean isProfileBanned() {
 		return masterBan;
 	}
+
+	/**
+	 * Devuelve true si es administrador de una mafia y si esta conectado,
+	 * se tiene en cuenta si su perfil esta suspeso
+	 * @return
+	 */
+	public boolean isPromoted() {
+		
+		if(getMafia() != null) {
+			
+			return getMafia().isAdmin(this);
+		}
+		return false;
+	}
 }

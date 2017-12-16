@@ -1,5 +1,6 @@
 package com.nsoft.bullnexmc.gang;
 
+import java.lang.management.GarbageCollectorMXBean;
 import java.util.ArrayList;
 
 import org.bukkit.ChatColor;
@@ -19,7 +20,10 @@ public class Mafia implements Field{
 	public String name;
 	private int Balance;
 	public ChatColor color;
+	
 	public ArrayList<GangPlayer> players;
+	private ArrayList<GangPlayer> promoteds;
+	
 	public ArrayList<GangPlayer> aplyForGangs = new ArrayList<>();
 	public ArrayList<Point> ownedPoints;
 	
@@ -262,9 +266,11 @@ public class Mafia implements Field{
 		}
 		return isOperator;
 	}
-	public boolean leaveMafia(GangPlayer p) {
+	public boolean leaveMafia(GangPlayer p) { return leaveMafia(p, false);}
+	
+	public boolean leaveMafia(GangPlayer p,boolean force) {
 		
-		if(p.getMafia() != this || !p.isConnected()) return false;
+		if(p.getMafia() != this || (!p.isConnected() && !force)) return false;
 		
 		getPlayers().remove(p);
 		removeOperator(p);
@@ -282,7 +288,7 @@ public class Mafia implements Field{
 		return true;
 	}
 	
-	//TODO: La gente que no este conectada deberia poder ser aceptada?? linea 291
+	//TODO: La gente que no este conectada deberia poder ser aceptada?? linea 307
 	/**
 	 * Acepta la unión de un nuevo miembro a la mafia
 	 * Devolvera false si:
@@ -298,16 +304,62 @@ public class Mafia implements Field{
 		GangPlayer p = getAspirantGang(personaName);
 		if(p == null) return false;
 		
-		if(p.isInMafia() || !p.isConnected()) {
+		if(p.isInMafia() || p.isProfileBanned()) {
 			
 			aplyForGangs.remove(p);
 			return false;
 		}
-		getPlayers().add(p);
+		
+		addPlayer(p, true);
 		
 		return true;
 	}
 	
+	public ArrayList<GangPlayer> getPromoteds() {
+		
+		return (ArrayList<GangPlayer>) promoteds.clone();
+	}
+	
+	public boolean isAdmin(GangPlayer p) {
+		
+		boolean isPromoted = false;
+		for (GangPlayer pl : promoteds) {
+			
+			if(p == pl) {
+				
+				isPromoted = true;
+				break;
+			}
+		}
+		
+		return isPromoted && p.isConnected();
+	}
+	public void promote(GangPlayer player,GangPlayer promoted,boolean force) {
+		
+		if(player.getMafia() != this) return;
+		if(force) {
+			promoteds.add(player);
+			return;
+		}
+		
+		boolean ready = force;
+		if(!ready) {
+			
+			for (GangPlayer p : promoteds) {
+				
+				if(p == promoted) {
+					
+					ready = true;
+					break;
+				}
+			}
+		}
+		
+		if(ready) {
+			
+			promoteds.add(player);
+		}
+	}
 	public void buy(Good object,GangPlayer player) {
 		
 		if(player.isConnected() && object.isAvaible()) 

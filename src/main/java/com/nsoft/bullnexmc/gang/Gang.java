@@ -32,7 +32,7 @@ public class Gang {
 	
 	static JavaPlugin plugin;
 	
-	static void init(FileConfiguration data, JavaPlugin p) {
+	public static void init(FileConfiguration data, JavaPlugin p) {
 		
 		plugin = p;
 		
@@ -56,6 +56,16 @@ public class Gang {
 		for (Mafia mafia : mafias) {
 			if(mafia.getName().equals(name)) {
 				return mafia;
+			}
+		}
+		return null;
+	}
+	
+	public static Good getGood(String goodName) {
+		
+		for (Good good : objects) {
+			if(good.getName().equals(goodName)) {		
+				return good;
 			}
 		}
 		return null;
@@ -179,12 +189,154 @@ public class Gang {
 				return true;
 			}
 		});
+		
+		p.getCommand("mafia-accept").setExecutor(new MyComandExecutor("mafia-accept") {
+			
+			@Override
+			public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+				if(!super.onCommand(sender, command, label, args)) return true;
+				
+				if(args.length != 1) {SpigotPlugin.sendMessage(sender, "Argumentos incorrectos",2); return true;}
+				
+				try {
+					GangPlayer player = getGangPlayer(sender.getName());
+					
+					if(player.isConnected()) {
+						
+						if(player.isInMafia()) {
+							
+							Mafia m = player.getMafia();
+							if(!m.acceptJoin(args[0]))
+								SpigotPlugin.sendMessage(sender, "Hubo un error admitiendo al jugador: " +args[0]);
+						}else
+							SpigotPlugin.sendMessage(sender, "No formas parte de ninguna mafia!",2);
+					}
+					
+				} catch (Exception e) { Errors.handleException(sender, e);}
+				
+				return true;
+			}
+		});
+		
+		p.getCommand("mafia-force-join").setExecutor(new MyComandExecutor("mafia-force-join") {
+			
+			@Override
+			public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+				if(!super.onCommand(sender, command, label, args)) return true;
+				
+				if(args.length != 2) {SpigotPlugin.sendMessage(sender, "Argumentos incorrectos",2); return true;}
+				if(!sender.isOp()) {SpigotPlugin.NotOPMessage(sender); return true;}
+				
+				try {
+					GangPlayer player = getGangPlayer(args[0]);
+					if(player.isInMafia()) player.getMafia().leaveMafia(player,true);
+					
+					getMafia(args[1]).addPlayer(player);
+					
+					if(args != null && args[2].equals("true")) {
+						
+						getMafia(args[1]).promote(player, null, true);
+					}
+				} catch (Exception e) { Errors.handleException(sender, e);}
+				
+				return true;
+			}
+		});
+		
+		p.getCommand("mafia-buy").setExecutor(new MyComandExecutor("mafia-buy") {
+			
+			@Override
+			public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+				if(!super.onCommand(sender, command, label, args)) return true;
+				
+				if(args.length != 1) {SpigotPlugin.sendMessage(sender, "Argumentos incorrectos",2); return true;}
+				
+				try {
+					GangPlayer player = getGangPlayer(sender.getName());
+					if(player.isInMafia() && player.isPromoted()) {
+						
+						Good a = getGood(args[0]);
+						if(a != null) {
+							
+							if(a.isAvaible()) {
+								
+								if(a.getBuyPrice() < player.getMafia().getBalance()) {
+									
+									a.setFreeAndOwn(player.getMafia(), null);
+								}else
+									SpigotPlugin.sendMessage(sender, "Tu mafia no tiene suficiente dinero.");
+									SpigotPlugin.sendMessage(sender, "Dinero de tu mafia " + player.getMafia().getBalance() + eco.currencyNamePlural());
+									SpigotPlugin.sendMessage(sender, "Precio de " + player.getMafia().getName() + ": " + a.getBuyPrice() + eco.currencyNamePlural());
+							}else
+								SpigotPlugin.sendMessage(sender, a.getType() + " " + a.getName() + " no esta disponible.");
+						}else
+							SpigotPlugin.sendMessage(sender, "No existe ningún bien en el server con el nombre: " + args[0],2);
+					}
+					
+				} catch (Exception e) { Errors.handleException(sender, e);}
+				
+				return true;
+			}
+		});
+		
+		p.getCommand("mafia-buy-self").setExecutor(new MyComandExecutor("mafia-buy-self") {
+			
+			@Override
+			public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+				if(!super.onCommand(sender, command, label, args)) return true;
+				
+				if(args.length != 1) {SpigotPlugin.sendMessage(sender, "Argumentos incorrectos",2); return true;}
+				
+				try {
+					GangPlayer player = getGangPlayer(sender.getName());
+					if(player.isInMafia() && player.isConnected()) {
+						
+						Good a = getGood(args[0]);
+						if(a != null) {
+							
+							if(a.isAvaible()) {
+								
+								if(a.getBuyPrice() < eco.getBalance(player.getOfflinePlayer())) {
+									
+									a.setFreeAndOwn(player.getMafia(), player);
+									eco.withdrawPlayer(player.getOfflinePlayer(), a.getBuyPrice());
+								}else
+									SpigotPlugin.sendMessage(sender, "No tienes suficiente dinero.");
+									SpigotPlugin.sendMessage(sender, "Tu dinero: " + eco.getBalance(player.getOfflinePlayer())+ eco.currencyNamePlural());
+									SpigotPlugin.sendMessage(sender, "Precio de " + player.getMafia().getName() + ": " + a.getBuyPrice() + eco.currencyNamePlural());
+							}else
+								SpigotPlugin.sendMessage(sender, a.getType() + " " + a.getName() + " no esta disponible.");
+						}else
+							SpigotPlugin.sendMessage(sender, "No existe ningún bien en el server con el nombre: " + args[0],2);
+					}
+					
+				} catch (Exception e) { Errors.handleException(sender, e);}
+				
+				return true;
+			}
+		});
+		
+		//TODO: Local creation protocol
+		p.getCommand("mafia-create-local").setExecutor(new MyComandExecutor("mafia-create-local") {
+			
+			@Override
+			public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+				if(!super.onCommand(sender, command, label, args)) return true;
+				
+				if(args.length != 5) {SpigotPlugin.sendMessage(sender, "Argumentos incorrectos",2); return true;}
+				
+				if(!sender.isOp()) {SpigotPlugin.NotOPMessage(sender); return true;}
+				
+				return true;
+			}
+		});
+		
 	}
 	/**
 	 * Carga las mafias
 	 * @param section La sección del YML que guarda todo lo relacionado con las Mafias
 	 */
-	public static void load(ConfigurationSection section) {
+	static void load(ConfigurationSection section) {
 		
 		
 	}

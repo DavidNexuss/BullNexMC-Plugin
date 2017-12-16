@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.avaje.ebeaninternal.server.subclass.GetterSetterMethods;
+import com.nsoft.bullnexmc.gang.Gang;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -128,6 +129,8 @@ public class SpigotPlugin extends JavaPlugin implements Listener {
     	
     	Update.PluginSize = checkSieze();
     	Update a = new Update();
+    	
+    	Gang.init(getConfig(), this);
     	getServer().broadcast( ChatColor.GREEN +"[BullNexRP] " + ChatColor.BLUE + "Plugin iniciado!", "bullnexmc.update");
         // Commands enabled with following method must have entries in plugin.yml
     	

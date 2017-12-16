@@ -1,17 +1,21 @@
 package com.nsoft.bullnexmc.gang;
 
+import java.util.ArrayList;
+
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
  * Representa un bien material ya sea un local {@link Point}
  * @author DavidNexuss
+ * @param 
  */
 public abstract class Good implements Field {
 
 	private String name;
 	private float pay;
 	
+	private static ArrayList<String> names;
 	private Mafia m;
 	private GangPlayer operator;
 	
@@ -22,8 +26,14 @@ public abstract class Good implements Field {
 	 */
 	public Good(String name,float pay) {
 		
+		if(!isNameAvaible(name)) throw new IllegalArgumentException();
 		this.name = name;
 		this.pay = pay;
+	}
+	
+	private boolean isNameAvaible(String name) {
+		
+		return names.contains(name); 
 	}
 	/**
 	 * Devuelve el valor del balance de base, es una función final que no se puede sobreescribir.
@@ -85,9 +95,13 @@ public abstract class Good implements Field {
 	
 	public void setFree() {
 		
-		getMafia().broadcast(getType() + " " + getName() + " ha sido liberado!");
-		this.m = null;
-		this.operator = null;
+		if(m != null) {
+			
+			getMafia().broadcast(getType() + " " + getName() + " ha sido liberado!");
+			this.m = null;
+			this.operator = null;
+		}
+		
 	}
 	
 	public void setFreeAndOwn(Mafia m,GangPlayer p) {

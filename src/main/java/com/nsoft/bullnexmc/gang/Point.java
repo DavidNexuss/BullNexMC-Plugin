@@ -129,5 +129,10 @@ public class Point extends Good{
 		return loc;
 	}
 
-	
+	@Override
+	public void own(Mafia m, GangPlayer p) {
+		// TODO Auto-generated method stub
+		super.own(m, p);
+		m.ownedPoints.add(this);
+	}
 }

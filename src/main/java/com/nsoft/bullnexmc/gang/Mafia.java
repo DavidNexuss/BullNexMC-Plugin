@@ -21,11 +21,11 @@ public class Mafia implements Field{
 	private int Balance;
 	public ChatColor color;
 	
-	public ArrayList<GangPlayer> players;
-	private ArrayList<GangPlayer> promoteds;
+	public ArrayList<GangPlayer> players = new ArrayList<>();
+	private ArrayList<GangPlayer> promoteds = new ArrayList<>();
 	
 	public ArrayList<GangPlayer> aplyForGangs = new ArrayList<>();
-	public ArrayList<Point> ownedPoints;
+	public ArrayList<Point> ownedPoints = new ArrayList<>();
 	
 	@Override
 	public void save(ConfigurationSection save) {
@@ -38,7 +38,7 @@ public class Mafia implements Field{
 		
 		for(int i = 0; i < ownedPoints.size(); i++) {
 			
-			points[i] = ownedPoints.get(i).getName();
+			points[i] = ownedPoints.get(i).getBaseName();
 		}
 		
 		save.set("points", points);
@@ -114,7 +114,7 @@ public class Mafia implements Field{
 			
 			if(pl.isConnected()) {
 				
-				SendMafiaMessage(pl.getPlayer(), "	  Tramitando cobro...");
+				SendMafiaMessage(pl.getPlayer(), "      Tramitando cobro...");
 				SendMafiaMessage(pl.getPlayer(), "---------------------------------");
 			}
 		}
@@ -123,7 +123,7 @@ public class Mafia implements Field{
 			float pay = point.getBaseBalance();
 			String bonus= ChatColor.GRAY + "(0.00%)";
 			
-			sendToAll("Beneficios de " + point.getName() + ":",
+			sendToAll("Beneficios de " + point.getFancyName() + ":",
 					"-------------------------------------");
 			
 			float old = pay;
@@ -141,7 +141,7 @@ public class Mafia implements Field{
 				}
 				
 				
-				SendMafiaMessage(point.getOperator().getPlayer(), "Beneficios por ser operador de " + point.getName() + " recibes un " + ChatColor.GREEN + "30% " + ChatColor.DARK_PURPLE + "del total.");
+				SendMafiaMessage(point.getOperator().getPlayer(), "Beneficios por ser operador de " + point.getFancyName() + " recibes un " + ChatColor.GREEN + "30% " + ChatColor.DARK_PURPLE + "del total.");
 				SendMafiaMessage(point.getOperator().getPlayer(), "Recibes " + ChatColor.GREEN + pay*.3f + eco.currencyNamePlural());
 				
 				point.getOperator().pay(pay*.3f);
@@ -149,7 +149,7 @@ public class Mafia implements Field{
 			
 			}
 			
-			sendToAll("Tramitando " + point.getName(),
+			sendToAll("Tramitando " + point.getFancyName(),
 					"Bonus por operaciones " + bonus, 
 					"El operador actual es: " + point.getOperator().getName(),
 					"Beneficios brutos: " + old + eco.currencyNamePlural(),

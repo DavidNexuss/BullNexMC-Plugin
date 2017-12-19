@@ -23,7 +23,7 @@ public class GangPlayer implements Field{
 	private Mafia mafia;				  /** Acceso a la mafia del jugador {@link Mafia}*/
 	private int lvl;
 	private int xp;
-	private ArrayList<Float> pay; 
+	private ArrayList<Float> pay = new ArrayList<>(); 
 	
 	private int joinCount = 0;
 	
@@ -36,8 +36,7 @@ public class GangPlayer implements Field{
 		if(lvl == 0) lvl = 1;
 		this.lvl = lvl;
 		this.xp = xp;
-		
-		pay = new ArrayList<>();
+
 		
 	}
 	

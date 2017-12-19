@@ -15,7 +15,7 @@ public abstract class Good implements Field {
 	private String name;
 	private float pay;
 	
-	private static ArrayList<String> names;
+	private static ArrayList<String> names = new ArrayList<>();
 	private Mafia m;
 	private GangPlayer operator;
 	
@@ -33,7 +33,7 @@ public abstract class Good implements Field {
 	
 	private boolean isNameAvaible(String name) {
 		
-		return names.contains(name); 
+		return !names.contains(name); 
 	}
 	/**
 	 * Devuelve el valor del balance de base, es una función final que no se puede sobreescribir.
@@ -43,10 +43,16 @@ public abstract class Good implements Field {
 	public final float getBaseBalance() {return pay;};
 	
 	/**
+	 * Devuelve el nombre del objeto, fancy
+	 * @return el nombre
+	 */
+	public String getFancyName() {return ChatColor.GREEN + name + ChatColor.DARK_PURPLE;};
+	
+	/**
 	 * Devuelve el nombre del objeto
 	 * @return el nombre
 	 */
-	public String getName() {return ChatColor.GREEN + name + ChatColor.DARK_PURPLE;};
+	public final String getBaseName() {return name;};
 	
 	/**
 	 * Devuelve el nombre del objeto
@@ -100,7 +106,7 @@ public abstract class Good implements Field {
 		this.m = m;
 		this.operator = p;
 		
-		getMafia().broadcast(getType() + " " + getName() + " ha sido comprado/a por tu mafia");
+		getMafia().broadcast(getType() + " " + getFancyName() + " ha sido comprado/a por tu mafia");
 		
 	}
 	
@@ -108,7 +114,7 @@ public abstract class Good implements Field {
 		
 		if(m != null) {
 			
-			getMafia().broadcast(getType() + " " + getName() + " ha sido liberado!");
+			getMafia().broadcast(getType() + " " + getFancyName() + " ha sido liberado!");
 			this.m = null;
 			this.operator = null;
 		}
@@ -119,6 +125,7 @@ public abstract class Good implements Field {
 		
 		setFree();
 		own(m, p);
+		
 	}
 	/**
 	 * @return the mafia
@@ -151,14 +158,14 @@ public abstract class Good implements Field {
 	public void quitOperator() {
 		
 		operator = null;
-		getMafia().broadcast("El operador de " + getName() + " ha sido revocado de sus funciones!");
+		getMafia().broadcast("El operador de " + getFancyName() + " ha sido revocado de sus funciones!");
 	}
 	/**
 	 * @return
 	 */
 	public boolean isAvaible() {
 		
-		return isOwned();
+		return !isOwned();
 	};
 	
 	public float getBuyPrice() { return Math.abs(pay)*100;}

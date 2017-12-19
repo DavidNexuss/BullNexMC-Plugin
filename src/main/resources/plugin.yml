@@ -74,7 +74,7 @@ commands:
     mafia-force-join:
        description: Obliga la unión a una mafia (Solo SuperAdmins)
        permission: bullnexmc.update
-       usage: /<command> <Persona Name> <Mafia Name>
+       usage: /<command> <Persona Name> <Mafia Name> <Promote Level>
     mafia-buy:
        description: Compra un bien para tu mafia, solo administradores de mafias
        permission: bullnexmc.normal
@@ -99,7 +99,14 @@ commands:
        description: Obten la lista de mafias
        permission: bullnexmc.normal
        usage: /<command>
-       
+    mafia:
+       description: Obten descripcion de tu mafia
+       permission: bullnexmc.normal
+       usage: /<command>
+    freeze:
+       description: Congela a tus enemigos! Muhahahha (Solo OP)
+       permission: bullnexmc.update
+       usage: /<command> <Enemigo>
 
 permissions:
     bullnexmc.update:

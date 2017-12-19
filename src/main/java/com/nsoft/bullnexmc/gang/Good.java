@@ -49,6 +49,17 @@ public abstract class Good implements Field {
 	public String getName() {return ChatColor.GREEN + name + ChatColor.DARK_PURPLE;};
 	
 	/**
+	 * Devuelve el nombre del objeto
+	 * @return el nombre
+	 */
+	public String getMafiaName() {
+		if(getMafia() != null)
+			return ChatColor.GREEN + getMafia().name + ChatColor.DARK_PURPLE;
+		return "";
+	};
+	
+	
+	/**
 	 * Devuelve el balance neto/final del objeto, sean beneficios o coste
 	 * Se puede sobreescribir según las necesidades
 	 * @return el balance final
@@ -119,7 +130,7 @@ public abstract class Good implements Field {
 	/**
 	 * @return true si este local pertenece ya pertenece a una mafia
 	 */
-	public final boolean isOwned() {return getMafia() == null;}
+	public final boolean isOwned() {return getMafia() != null;}
 
 	public void setOperator(GangPlayer player) {
 		

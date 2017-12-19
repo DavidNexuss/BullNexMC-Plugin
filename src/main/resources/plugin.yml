@@ -51,6 +51,55 @@ commands:
        description: Quita un plugin (Solo SuperAdmins)
        permission: bullnexmc.update
        usage: /<command> <Plugin Name>
+    mafia-ban:
+       description: Suspende a un jugador (Solo SuperAdmins)
+       permission: bullnexmc.update
+       usage: /<command> <Persona Name>
+    mafia-unban:
+       description: Desbanea a un jugador (Solo SuperAdmins)
+       permission: bullnexmc.update
+       usage: /<command> <Persona Name>
+    mafia-create:
+       description: Crea a una mafia (Solo SuperAdmins)
+       permission: bullnexmc.update
+       usage: /<command> <Mafia Name> <Color>
+    mafia-join:
+       description: Unete a una mafia
+       permission: bullnexmc.normal
+       usage: /<command> <Mafia Name>
+    mafia-accept:
+       description: Acepta a un jugador en tu mafia
+       permission: bullnexmc.normal
+       usage: /<command> <Persona Name>
+    mafia-force-join:
+       description: Obliga la unión a una mafia (Solo SuperAdmins)
+       permission: bullnexmc.update
+       usage: /<command> <Persona Name> <Mafia Name>
+    mafia-buy:
+       description: Compra un bien para tu mafia, solo administradores de mafias
+       permission: bullnexmc.normal
+       usage: /<command> <Objeto>
+    mafia-buy-self:
+       description: Compra un bien para tu mafia, con tu dinero
+       permission: bullnexmc.normal
+       usage: /<command> <Objeto>
+    mafia-create-local:
+       description: Crea un local
+       permission: bullnexmc.update
+       usage: /<command> <Name> <Paga> <Bonus>
+    mafia-test-pay:
+       description: Fuerza un pago
+       permission: bullnexmc.update
+       usage: /<command> <Mafia>
+    mafia-good-list:
+       description: Obten la lista de bienes
+       permission: bullnexmc.normal
+       usage: /<command>
+    mafia-mafia-list:
+       description: Obten la lista de mafias
+       permission: bullnexmc.normal
+       usage: /<command>
+       
 
 permissions:
     bullnexmc.update:

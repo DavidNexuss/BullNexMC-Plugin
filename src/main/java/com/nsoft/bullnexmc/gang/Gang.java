@@ -2,6 +2,7 @@ package com.nsoft.bullnexmc.gang;
 
 import java.util.ArrayList;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -327,10 +328,70 @@ public class Gang {
 				
 				if(!sender.isOp()) {SpigotPlugin.NotOPMessage(sender); return true;}
 				
+				//TODO: Correct creation:
+				
+				try {
+					
+					Point a = new Point(Integer.parseInt(args[1]), args[0], null, .2f, getGangPlayer(sender.getName()).getPlayer().getLocation());
+					//TODO Normal protocol;
+					points.add(a);
+					objects.add(a);
+					
+				} catch (Exception e) {
+					
+					SpigotPlugin.sendMessage(sender, "Error en los parametros");
+				}
 				return true;
 			}
 		});
 		
+		p.getCommand("mafia-test-pay").setExecutor(new MyComandExecutor("mafia-create-local") {
+			
+			@Override
+			public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+				if(!super.onCommand(sender, command, label, args)) return true;
+				
+				if(args.length != 1) {SpigotPlugin.sendMessage(sender, "Argumentos incorrectos",2); return true;}
+				
+				if(!sender.isOp()) {SpigotPlugin.NotOPMessage(sender); return true;}
+				
+				Mafia a = getMafia(args[0]);
+				if(a != null) {
+					
+					a.PayAll();
+				}
+				return true;
+			}
+		});
+
+		p.getCommand("mafia-good-list").setExecutor(new MyComandExecutor("mafia-good-list") {
+			
+			@Override
+			public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+				if(!super.onCommand(sender, command, label, args)) return true;
+				
+				for (Good good : objects) {
+					
+					if(good.isOwned()) SpigotPlugin.sendMessage(sender, ChatColor.GREEN + "[Gang List] " + ChatColor.DARK_PURPLE + good.getType() + ": " + good.getName() + " de la mafia: " + good.getMafiaName());
+					else SpigotPlugin.sendMessage(sender, ChatColor.GREEN + "[Gang List] " + ChatColor.DARK_PURPLE + good.getType() + ": " + good.getName() + " no pertenece a ninguna mafia");
+				}
+				return true;
+			}
+		});
+		
+		p.getCommand("mafia-mafia-list").setExecutor(new MyComandExecutor("mafia-mafia-list") {
+			
+			@Override
+			public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+				if(!super.onCommand(sender, command, label, args)) return true;
+				
+				for (Mafia m : mafias) {
+					
+					SpigotPlugin.sendMessage(sender,ChatColor.GREEN + "[Gang List] " + m.getFancyName() + ", balance: " + m.getBalance() + eco.currencyNamePlural());
+				}
+				return true;
+			}
+		});
 	}
 	/**
 	 * Carga las mafias

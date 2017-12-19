@@ -240,6 +240,8 @@ public class Mafia implements Field{
 	 */
 	public String getName() {return name;}
 	
+	public String getFancyName() {return ChatColor.GREEN + getName() + ChatColor.DARK_PURPLE;}
+	
 	public GangPlayer getAspirantGang(String name) {
 		
 		for (GangPlayer gang : aplyForGangs) {

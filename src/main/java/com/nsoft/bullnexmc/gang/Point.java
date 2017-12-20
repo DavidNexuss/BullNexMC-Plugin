@@ -1,5 +1,7 @@
 package com.nsoft.bullnexmc.gang;
 
+import java.util.ArrayList;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -21,12 +23,15 @@ public class Point extends Good{
 	
 	private Location loc;
 	
+	static ArrayList<Point> points = new ArrayList<>();
+	
 	public Point(float defaultPay, String name, String displayItem, float bonus,Location loc) {
 		
 		super(name,defaultPay);
 		this.displayItem = Material.getMaterial(displayItem);
 		this.bonus = bonus;
 		this.loc = loc;
+		points.add(this);
 		
 	}
 	

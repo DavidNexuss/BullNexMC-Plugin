@@ -119,7 +119,7 @@ public class GangPlayer implements Field{
 	 * Devuelve el nivel del jugador
 	 * @return el nivel
 	 */
-	public float getLevel() { return lvl; }
+	public int getLevel() { return lvl; }
 
 	/**
 	 * Devuelve la mafia de la que es participe, sinó esta en ninguna mafia devuelve null

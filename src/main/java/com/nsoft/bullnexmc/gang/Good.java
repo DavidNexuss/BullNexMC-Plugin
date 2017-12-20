@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
+import com.nsoft.bullnexmc.SpigotPlugin;
+
 /**
  * Representa un bien material ya sea un local {@link Point}
  * @author DavidNexuss
@@ -16,8 +18,11 @@ public abstract class Good implements Field {
 	private float pay;
 	
 	private static ArrayList<String> names = new ArrayList<>();
+	
 	private Mafia m;
 	private GangPlayer operator;
+	
+	static ArrayList<Good> goods = new ArrayList<>();
 	
 	/**
 	 * Constructor para crear un nuevo bien
@@ -29,6 +34,8 @@ public abstract class Good implements Field {
 		if(!isNameAvaible(name)) throw new IllegalArgumentException();
 		this.name = name;
 		this.pay = pay;
+		goods.add(this);
+
 	}
 	
 	private boolean isNameAvaible(String name) {
@@ -169,4 +176,17 @@ public abstract class Good implements Field {
 	};
 	
 	public float getBuyPrice() { return Math.abs(pay)*100;}
+	
+	public void destroy() {
+		
+		goods.remove(this);
+		
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		// TODO Auto-generated method stub
+		SpigotPlugin.BroadCast(getType() + ": " + getFancyName() + " ha sido eliminado.");
+		super.finalize();
+	}
 }

@@ -22,10 +22,6 @@ public class Gang {
 
 	static Economy eco = null; 
 	
-	static ArrayList<Good> objects = new ArrayList<>();
-	
-		static ArrayList<Point> points = new ArrayList<>();
-	
 	static ArrayList<GangPlayer> players = new ArrayList<>();
 	static ArrayList<Mafia> mafias = new ArrayList<>();
 	
@@ -66,7 +62,7 @@ public class Gang {
 	
 	public static Good getGood(String goodName) {
 		
-		for (Good good : objects) {
+		for (Good good : Good.goods) {
 			if(good.getBaseName().equals(goodName)) {		
 				return good;
 			}
@@ -162,7 +158,17 @@ public class Gang {
 					if(!sender.isOp()) SpigotPlugin.NotOPMessage(sender); else {
 						
 						if(args.length != 2) { SpigotPlugin.sendMessage(sender, "Argumentos incorrectos",2);return true;}
-						if(ChatColor.valueOf(args[1]) == null) {SpigotPlugin.sendMessage(sender, "Color invalido: " + args[1],2); return true;} //TODO: Check Enum.valueOf()
+						
+						
+						ChatColor c = ChatColor.BLACK;
+						try {
+							
+							c = ChatColor.valueOf(args[1]);
+						} catch (Exception e) {
+							
+							SpigotPlugin.sendMessage(sender, "Este color no existe! " + args[1]);
+							return true;
+						}
 						
 						Mafia m = new Mafia(args[0], ChatColor.valueOf(args[1]), 0);
 						mafias.add(m);
@@ -333,11 +339,12 @@ public class Gang {
 									a.setFreeAndOwn(player.getMafia(), player);
 									eco.withdrawPlayer(player.getOfflinePlayer(), a.getBuyPrice());
 									SpigotPlugin.sendMessage(sender, "Bien comprado.");
-									SpigotPlugin.sendMessage(sender, "Te quedan: " + eco.getBalance(player.getOfflinePlayer()));
-								}else
+									SpigotPlugin.sendMessage(sender, "Te quedan: " + eco.getBalance(player.getOfflinePlayer())  + eco.currencyNamePlural());
+								}else {
 									SpigotPlugin.sendMessage(sender, "No tienes suficiente dinero.");
 									SpigotPlugin.sendMessage(sender, "Tu dinero: " + eco.getBalance(player.getOfflinePlayer())+ eco.currencyNamePlural());
 									SpigotPlugin.sendMessage(sender, "Precio de " + player.getMafia().getName() + ": " + a.getBuyPrice() + eco.currencyNamePlural());
+								}
 							}else
 								SpigotPlugin.sendMessage(sender, a.getType() + " " + a.getFancyName() + " no esta disponible.");
 						}else
@@ -364,9 +371,7 @@ public class Gang {
 				//TODO: Correct creation:
 					
 					Point a = new Point(Integer.parseInt(args[1]), args[0], null, .2f, getGangPlayer(sender.getName()).getPlayer().getLocation());
-					//TODO Normal protocol;
-					points.add(a);
-					objects.add(a);
+					
 					
 					SpigotPlugin.sendMessage(sender, "Local creado.");
 				
@@ -400,13 +405,13 @@ public class Gang {
 			public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 				if(!super.onCommand(sender, command, label, args)) return true;
 				
-				for (Good good : objects) {
+				for (Good good : Good.goods) {
 					
 					if(good.isOwned()) SpigotPlugin.sendMessage(sender, ChatColor.BLUE + "[Gang List] " + ChatColor.DARK_PURPLE + good.getType() + ": " + good.getFancyName() + " de la mafia: " + good.getMafiaName());
 					else SpigotPlugin.sendMessage(sender, ChatColor.BLUE + "[Gang List] " + ChatColor.DARK_PURPLE + good.getType() + ": " + good.getFancyName() + " no pertenece a ninguna mafia, " + good.getBuyPrice());
 				}
 				
-				if(objects.size() == 0) SpigotPlugin.sendMessage(sender, "No hay bienes.");
+				if(Good.goods.size() == 0) SpigotPlugin.sendMessage(sender, "No hay bienes.");
 				return true;
 			}
 		});
@@ -419,10 +424,115 @@ public class Gang {
 				
 				for (Mafia m : mafias) {
 					
-					SpigotPlugin.sendMessage(sender,ChatColor.BLUE + "[Gang List] " + m.getFancyName() + ", balance: " + m.getBalance() + eco.currencyNamePlural());
+					SpigotPlugin.sendMessage(sender,ChatColor.BLUE + "[Gang List] " + m.getFancyName() + ", balance: " + (int)m.getBalance() +" " +eco.currencyNamePlural());
 				}
 				
 				if(mafias.size() == 0) SpigotPlugin.sendMessage(sender, "No hay mafias.");
+				return true;
+			}
+		});
+		
+		p.getCommand("mafia-promote").setExecutor(new MyComandExecutor("mafia-promote") {
+			
+			@Override
+			public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+				if(!super.onCommand(sender, command, label, args)) return true;
+				
+				if(args.length != 1) SpigotPlugin.sendMessage(sender, "Argumentos incorrectos",2);
+				
+				GangPlayer p = getGangPlayer(sender.getName());
+				
+				if(!p.isConnected()) { SpigotPlugin.sendMessage(sender, "Tienes el perfil suspendido!",2); return true;}
+				
+				if(p.isInMafia()) {
+					
+					if(p.isPromoted()) {
+						
+						GangPlayer o = p.getMafia().getPlayer(args[0]);
+						
+						if(o != null) {
+							
+							p.getMafia().promote(o, p, true);
+							SpigotPlugin.sendMessage(sender, "El jugador " + args[0] + " ha sido puestoo como admin de la mafia");
+						}else {
+							
+							SpigotPlugin.sendMessage(sender, "No existe ningun jugador con el nombre: " + args[0],2);
+						}
+					}else {
+						
+						SpigotPlugin.sendMessage(sender, "No tienes nivel suficiente para realizar esta operación!",2);
+					}
+				}else {
+					
+					SpigotPlugin.sendMessage(sender, "No eres miembro de ninguna mafia!",2);
+				}
+				return true;
+			}
+		});
+		
+		p.getCommand("mafia-force-promote").setExecutor(new MyComandExecutor("mafia-force-promote") {
+			
+			@Override
+			public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+				if(!super.onCommand(sender, command, label, args)) return true;
+				
+				if(args.length != 1) SpigotPlugin.sendMessage(sender, "Argumentos incorrectos",2);
+				
+				GangPlayer p = getGangPlayer(args[0]);
+				
+				if(!p.isConnected()) { SpigotPlugin.sendMessage(sender, "Tienes el perfil suspendido!",2); return true;}
+
+				if(p.isInMafia()) {
+					
+					if(!p.isPromoted()) {
+						
+						p.getMafia().promote(p, null, true);
+						SpigotPlugin.sendMessage(sender, "El jugador " + args[0] + " ha sido puestoo como admin de la mafia");
+					}else {
+						
+						SpigotPlugin.sendMessage(sender, "Este jugador ya es admin",2);
+					}
+				}else {
+					
+					SpigotPlugin.sendMessage(sender, "Este jugador no esta en ninguna mafia.",2);
+				}
+				return true;
+			}
+		});
+		p.getCommand("mafia-demote").setExecutor(new MyComandExecutor("mafia-demote") {
+			
+			@Override
+			public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+				if(!super.onCommand(sender, command, label, args)) return true;
+				
+				if(args.length != 1) SpigotPlugin.sendMessage(sender, "Argumentos incorrectos",2);
+				
+				GangPlayer p = getGangPlayer(sender.getName());
+				
+				if(!p.isConnected()) { SpigotPlugin.sendMessage(sender, "Tienes el perfil suspendido!",2); return true;}
+				
+				if(p.isInMafia()) {
+					
+					if(p.isPromoted()) {
+						
+						GangPlayer o = p.getMafia().getPlayer(args[0]);
+						
+						if(o != null) {
+							
+							p.getMafia().demote(o, p, true);
+							SpigotPlugin.sendMessage(sender, "Se han revocado las funciones de administrador al jugador: " + args[0]);
+						}else {
+							
+							SpigotPlugin.sendMessage(sender, "No existe ningun jugador con el nombre: " + args[0],2);
+						}
+					}else {
+						
+						SpigotPlugin.sendMessage(sender, "No tienes nivel suficiente para realizar esta operación!",2);
+					}
+				}else {
+					
+					SpigotPlugin.sendMessage(sender, "No eres miembro de ninguna mafia!",2);
+				}
 				return true;
 			}
 		});
@@ -440,9 +550,9 @@ public class Gang {
 	 */
 	public static void save() {
 		
-		for (int i = 0; i < points.size(); i++) {
+		for (int i = 0; i < Good.goods.size(); i++) {
 			
-			points.get(i).save(Data.getConfigurationSection("points." + i));
+			Good.goods.get(i).save(Data.getConfigurationSection("good." + i));
 		}
 		for (int i = 0; i < players.size(); i++) {
 	
@@ -469,8 +579,8 @@ public class Gang {
 	/**
 	 * @return Todos los locales
 	 */
-	public static ArrayList<Point> getPoints() {
-		return points;
+	public static ArrayList<Point> getPointsClone() {
+		return (ArrayList<Point>) Point.points.clone();
 	}
 
 	/**

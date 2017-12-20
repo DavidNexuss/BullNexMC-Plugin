@@ -140,19 +140,15 @@ public class Mafia implements Field{
 					bonus= ChatColor.RED + "(" + (point.getBonus()*100) + "%)";
 				}
 				
-				
-				SendMafiaMessage(point.getOperator().getPlayer(), "Beneficios por ser operador de " + point.getFancyName() + " recibes un " + ChatColor.GREEN + "30% " + ChatColor.DARK_PURPLE + "del total.");
-				SendMafiaMessage(point.getOperator().getPlayer(), "Recibes " + ChatColor.GREEN + pay*.3f + eco.currencyNamePlural());
+				SendMafiaMessage(point.getOperator().getPlayer(), "Recibes " + ChatColor.GREEN + pay*.3f + eco.currencyNamePlural() + " por ser operador" + ChatColor.GREEN + " (30%)");
 				
 				point.getOperator().pay(pay*.3f);
 				Gang.eco.depositPlayer(point.getOperator().getOfflinePlayer(), pay * .3f);
 			
 			}
 			
-			sendToAll("Tramitando " + point.getFancyName(),
-					"Bonus por operaciones " + bonus, 
+			sendToAll("Bonus por operaciones " + bonus, 
 					"El operador actual es: " + point.getOperator().getName(),
-					"Beneficios brutos: " + old + eco.currencyNamePlural(),
 					"Beneficios netos: " + ChatColor.GREEN + pay + eco.currencyNamePlural());
 			
 			Balance += pay*.3f;
@@ -174,6 +170,11 @@ public class Mafia implements Field{
 				SendMafiaMessage(pl.getPlayer(), "Recibes un " + ChatColor.GREEN + "(" + (pl.getLevel()/total)*100 + "%)" +ChatColor.DARK_PURPLE + " del 40% a repartir",
 						"Recibes un " + ChatColor.GREEN + (.4f * (pl.getLevel()/total))*100 + "% " + ChatColor.DARK_PURPLE + "recibes " + ChatColor.GREEN + payI + eco.currencyNamePlural());
 				
+				int lvl = pl.getLevel();
+				pl.addXP(payI/2);
+				
+				if(lvl != pl.getLevel()) 
+					SendMafiaMessage(pl.getPlayer(), "Has subido de nivel! " + ChatColor.GREEN + pl.getLevel());
 			}
 		}
 		
@@ -181,6 +182,7 @@ public class Mafia implements Field{
 			
 			if(pl.isConnected()) {
 				
+				SendMafiaMessage(pl.getPlayer(),ChatColor.BLACK +  "#############################");
 				SendMafiaMessage(pl.getPlayer(), "Sumatorio de todos los pagos: ");
 				String[] list = pl.retrieveList();
 				
@@ -188,7 +190,7 @@ public class Mafia implements Field{
 					SendMafiaMessage(pl.getPlayer(), "	" + string);
 				}
 				
-				SendMafiaMessage(pl.getPlayer(), "Total " + pl.Total());
+				SendMafiaMessage(pl.getPlayer(), "Total " + ChatColor.GREEN + (int)pl.Total() + Gang.eco.currencyNamePlural());
 				pl.clear();
 			}
 		}
@@ -259,7 +261,7 @@ public class Mafia implements Field{
 		boolean isOperator = false;
 		if(player.getMafia() != this) return false;
 		
-		for (Point p : getPoints()) {	
+		for (Point p : ownedPoints) {	
 			if(p.getOperator() == player) {
 				
 				p.quitOperator();
@@ -360,6 +362,33 @@ public class Mafia implements Field{
 		if(ready) {
 			
 			promoteds.add(player);
+		}
+	}
+	
+	public void demote(GangPlayer player,GangPlayer promoted,boolean force) {
+		
+		if(player.getMafia() != this) return;
+		if(force) {
+			promoteds.remove(player);
+			return;
+		}
+		
+		boolean ready = force;
+		if(!ready) {
+			
+			for (GangPlayer p : promoteds) {
+				
+				if(p == promoted) {
+					
+					ready = true;
+					break;
+				}
+			}
+		}
+		
+		if(ready) {
+			
+			promoteds.remove(player);
 		}
 	}
 	public void buy(Good object,GangPlayer player) {

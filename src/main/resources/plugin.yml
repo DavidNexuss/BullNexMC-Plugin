@@ -103,6 +103,18 @@ commands:
        description: Obten descripcion de tu mafia
        permission: bullnexmc.normal
        usage: /<command>
+    mafia-promote:
+       description: Dale permiso de administrador en una mafia a un jugador
+       permission: bullnexmc.normal
+       usage: /<command> <Persona Name>
+    mafia-demote:
+       description: Quitale el permiso de administrador a un jugador de una mafia
+       permission: bullnexmc.normal
+       usage: /<command> <Persona Name>
+    mafia-force-promote:
+       description: Dale permiso de administrador en una mafia a un jugador (version OP)
+       permission: bullnexmc.normal
+       usage: /<command> <Persona Name>
     freeze:
        description: Congela a tus enemigos! Muhahahha (Solo OP)
        permission: bullnexmc.update

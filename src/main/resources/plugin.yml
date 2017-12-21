@@ -113,12 +113,20 @@ commands:
        usage: /<command> <Persona Name>
     mafia-force-promote:
        description: Dale permiso de administrador en una mafia a un jugador (version OP)
-       permission: bullnexmc.normal
+       permission: bullnexmc.update
        usage: /<command> <Persona Name>
+    mafia-force-save:
+       description: Guarda la base de datos (solo OP)
+       permission: bullnexmc.update
+       usage: /<command>
     freeze:
        description: Congela a tus enemigos! Muhahahha (Solo OP)
        permission: bullnexmc.update
        usage: /<command> <Enemigo>
+    mafia-local-fake:
+       description: Fake
+       permission: bullnexmc.update
+       usage: /<command>
 
 permissions:
     bullnexmc.update:

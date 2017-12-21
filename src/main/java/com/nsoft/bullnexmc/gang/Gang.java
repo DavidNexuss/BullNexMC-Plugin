@@ -3,6 +3,7 @@ package com.nsoft.bullnexmc.gang;
 import java.util.ArrayList;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -44,7 +45,7 @@ public class Gang {
 		Data = data;
 		load(Data.getConfigurationSection("gang"));
 		initCommands(p);
-		
+		Dictionary.init();
 		Mafia.payThread.start();
 	}
 	/**
@@ -79,13 +80,15 @@ public class Gang {
 	public static GangPlayer getGangPlayer(OfflinePlayer player) {
 		
 		for (GangPlayer p : players) {
-			if(p.getOfflinePlayer() == player) {
+			
+			if(p.getOfflinePlayer().getUniqueId().toString().equals(player.getUniqueId().toString())) {
+				
 				return p;
 			}
 		}
 		
-		GangPlayer a = new GangPlayer(player.getName(), null, 1, 0);
-		getPlayers().add(a);
+		GangPlayer a = new GangPlayer(player.getUniqueId(), null, 1, 0);
+		players.add(a);
 		return a;
 	}
 	/**
@@ -93,7 +96,9 @@ public class Gang {
 	 * @param player
 	 * @return Su objeto {@link GangPlayer}
 	 */
-	public static GangPlayer getGangPlayer(Player player) {return getGangPlayer(plugin.getServer().getOfflinePlayer(player.getName()));}
+	public static GangPlayer getGangPlayer(Player player) {
+		return getGangPlayer(plugin.getServer().getOfflinePlayer(player.getUniqueId()));
+	}
 	
 	/**
 	 * @see Gang#getGangPlayer(OfflinePlayer)
@@ -103,9 +108,10 @@ public class Gang {
 	 */
 	public static GangPlayer getGangPlayer(String player_name){
 		
-		if(plugin.getServer().getOfflinePlayer(player_name) != null) {
+
+		if(plugin.getServer().getOfflinePlayer(Dictionary.getPlayerUUID(player_name)) != null) {
 			
-			return getGangPlayer(plugin.getServer().getOfflinePlayer(player_name));
+			return getGangPlayer(plugin.getServer().getOfflinePlayer(Dictionary.getPlayerUUID(player_name)));
 		}else
 			return null;
 		
@@ -172,7 +178,7 @@ public class Gang {
 							return true;
 						}
 						
-						Mafia m = new Mafia(args[0], ChatColor.valueOf(args[1]), 0);
+						Mafia m = new Mafia(args[0], c, 0);
 						mafias.add(m);
 						SpigotPlugin.sendMessage(sender, "Mafia creada con éxito!");
 					}
@@ -252,7 +258,12 @@ public class Gang {
 					
 					for (GangPlayer gang : p.getMafia().players) {
 						
-						m.SendMafiaMessage(sender, "   -" + gang.getName() + ", nivel: " + gang.getLevel());
+						if(gang.isPromoted() && gang.isConnected())
+							m.SendMafiaMessage(sender, "   -" + ChatColor.GOLD + gang.getName() + ChatColor.DARK_PURPLE + ", nivel: " + gang.getLevel());
+						else if(gang.isConnected())
+							m.SendMafiaMessage(sender, "   -" + ChatColor.GREEN + gang.getName() + ChatColor.DARK_PURPLE + ", nivel: " + gang.getLevel());
+						else
+							m.SendMafiaMessage(sender, "   -" + ChatColor.GRAY + gang.getName() + ChatColor.DARK_PURPLE + ", nivel: " + gang.getLevel());
 					}
 					
 					ArrayList<Good> goods = Good.ownedGood(m);
@@ -410,7 +421,7 @@ public class Gang {
 				
 				//TODO: Correct creation:
 					
-					Point a = new Point(Integer.parseInt(args[1]), args[0], null, .2f, getGangPlayer(sender.getName()).getPlayer().getLocation().clone());
+					new Point(Integer.parseInt(args[1]), args[0], "DIAMOND_SWORD", .2f, getGangPlayer(sender.getName()).getPlayer().getLocation());
 					
 					
 					SpigotPlugin.sendMessage(sender, "Local creado.");
@@ -452,6 +463,20 @@ public class Gang {
 				}
 				
 				if(Good.goods.size() == 0) SpigotPlugin.sendMessage(sender, "No hay bienes.");
+				return true;
+			}
+		});
+		
+		p.getCommand("mafia-force-save").setExecutor(new MyComandExecutor("mafia-force-save") {
+			
+			@Override
+			public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+				if(!super.onCommand(sender, command, label, args)) return true;
+				
+				if(!sender.isOp()) {SpigotPlugin.NotOPMessage(sender); return true;}
+				
+				save();
+				SpigotPlugin.sendMessage(sender, "Configuración guardada");
 				return true;
 			}
 		});
@@ -576,6 +601,19 @@ public class Gang {
 				return true;
 			}
 		});
+		
+		p.getCommand("mafia-local-fake").setExecutor(new MyComandExecutor("mafia-local-fake") {
+			
+			@Override
+			public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+				if(!super.onCommand(sender, command, label, args)) return true;
+				
+				if(!sender.isOp()) {SpigotPlugin.NotOPMessage(sender); return true;}
+				
+				Point.createFakeStructure(getGangPlayer(sender.getName()).getPlayer().getLocation(), getGangPlayer(sender.getName()).getPlayer());
+				return true;
+			}
+		});
 	}
 	/**
 	 * Carga las mafias
@@ -592,16 +630,27 @@ public class Gang {
 		
 		for (int i = 0; i < Good.goods.size(); i++) {
 			
+			if(Data.getConfigurationSection("good." + i) == null) 	
+				Data.createSection("good." + i);
+			
 			Good.goods.get(i).save(Data.getConfigurationSection("good." + i));
 		}
 		for (int i = 0; i < players.size(); i++) {
 	
+			if(Data.getConfigurationSection("players." + i) == null) 	
+				Data.createSection("players." + i);
+			
 			players.get(i).save(Data.getConfigurationSection("players." + i));
 		}
 		for (int i = 0; i < mafias.size(); i++) {
 			
+			if(Data.getConfigurationSection("mafias." + i) == null) 	
+				Data.createSection("mafias." + i);
+			
 			mafias.get(i).save(Data.getConfigurationSection("mafias." + i));
 		}
+		
+		plugin.saveConfig();
 	}
 	
 	private static boolean setupEconomy() {

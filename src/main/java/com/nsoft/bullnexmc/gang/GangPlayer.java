@@ -1,6 +1,7 @@
 package com.nsoft.bullnexmc.gang;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -28,9 +29,9 @@ public class GangPlayer implements Field{
 	private int joinCount = 0;
 	
 	private boolean masterBan = false;
-	public GangPlayer(String pName,Mafia m,int lvl,int xp) {
+	public GangPlayer(UUID uid,Mafia m,int lvl,int xp) {
 		
-		this.p = SpigotPlugin.plugin.getServer().getOfflinePlayer(pName);
+		this.p = SpigotPlugin.plugin.getServer().getOfflinePlayer(uid);
 		this.mafia = m;
 		
 		if(lvl == 0) lvl = 1;

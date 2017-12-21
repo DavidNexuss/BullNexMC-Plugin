@@ -68,14 +68,45 @@ public class Point extends Good implements Locable{
 	private enum Case{YOURS,ENEMY,NOBODY}
 	
 	//TODO: Finish this infernal method
+	
+	private static Location l(Location a, float x, float z) { return new Location(a.getWorld(), a.getBlockX() + x, a.getBlockY(), a.getBlockZ() + z);}
+	private static Location l(Location a, float x, float y, float z) { return new Location(a.getWorld(), a.getBlockX() + x, a.getBlockY() + y, a.getBlockZ() + z);}
+	public static void createFakeStructure(Location l,Player p) {
+		
+		p.sendBlockChange(l(l,1,1), Material.WOOL, WoolColors.WHITE);
+		p.sendBlockChange(l(l,1,0), Material.WOOL, WoolColors.WHITE);
+		p.sendBlockChange(l(l,1,-1), Material.WOOL, WoolColors.WHITE);
+		
+		p.sendBlockChange(l(l,0,1), Material.WOOL, WoolColors.WHITE);
+		p.sendBlockChange(l(l,0,0), Material.WOOL, WoolColors.WHITE);
+		p.sendBlockChange(l(l,0,-1), Material.WOOL, WoolColors.WHITE);
+		
+		p.sendBlockChange(l(l,-1,1), Material.WOOL, WoolColors.WHITE);
+		p.sendBlockChange(l(l,-1,0), Material.WOOL, WoolColors.WHITE);
+		p.sendBlockChange(l(l,-1,-1), Material.WOOL, WoolColors.WHITE);
+		
+		p.sendBlockChange(l(l,-1,1,-1), Material.WOOL, WoolColors.WHITE);
+		p.sendBlockChange(l(l,-1,1,1), Material.WOOL, WoolColors.WHITE);
+		p.sendBlockChange(l(l,1,1,-1), Material.WOOL, WoolColors.WHITE);
+		p.sendBlockChange(l(l,1,1,1), Material.WOOL, WoolColors.WHITE);
+		
+		p.sendBlockChange(l(l,-1,1,-1), Material.WOOL, WoolColors.WHITE);
+		p.sendBlockChange(l(l,-1,1,1), Material.WOOL, WoolColors.WHITE);
+		p.sendBlockChange(l(l,1,1,-1), Material.WOOL, WoolColors.WHITE);
+		p.sendBlockChange(l(l,1,1,1), Material.WOOL, WoolColors.WHITE);
+		
+		p.sendBlockChange(l(l,2,0), Material.WOOL, WoolColors.WHITE);
+		p.sendBlockChange(l(l,-2,0), Material.WOOL, WoolColors.WHITE);
+		p.sendBlockChange(l(l,0,2), Material.WOOL, WoolColors.WHITE);
+		p.sendBlockChange(l(l,0,-2), Material.WOOL, WoolColors.WHITE);
+	}
 	private void createStructure(Player p,Case c) {
 		
 		GangPlayer pl = Gang.getGangPlayer(p);
 		
 		if(c == Case.NOBODY) {
 			
-			
-			p.sendBlockChange(getLocation(), Material.WOOL, (byte) 1);
+			p.sendBlockChange(getLocation(), Material.WOOL, WoolColors.MAGENTA);
 		}
 		else if(c == Case.ENEMY) {}
 		else if(c == Case.YOURS) {}

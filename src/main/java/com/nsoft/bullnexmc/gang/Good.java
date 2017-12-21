@@ -7,6 +7,8 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import com.nsoft.bullnexmc.SpigotPlugin;
 
+import net.milkbowl.vault.economy.Economy;
+
 /**
  * Representa un bien material ya sea un local {@link Point}
  * @author DavidNexuss
@@ -15,7 +17,7 @@ import com.nsoft.bullnexmc.SpigotPlugin;
 public abstract class Good implements Field {
 
 	private String name;
-	private float pay;
+	private int pay;
 	
 	private static ArrayList<String> names = new ArrayList<>();
 	
@@ -29,7 +31,7 @@ public abstract class Good implements Field {
 	 * @param name El nombre del objeto
 	 * @param pay Su coste o sus beneficios
 	 */
-	public Good(String name,float pay) {
+	public Good(String name,int pay) {
 		
 		if(!isNameAvaible(name)) throw new IllegalArgumentException();
 		this.name = name;
@@ -38,6 +40,31 @@ public abstract class Good implements Field {
 
 	}
 	
+	//TODO: Check if that works
+	public static <T> ArrayList<T> ownedGood(Mafia m,Class<T> c){
+		
+		ArrayList<T> ngoods = new ArrayList<>();
+		for (Good good : goods) {
+			
+			if(good.m == m) {
+
+				try {
+					T v = (T)good;
+					ngoods.add(v);
+				} catch (Exception e) {
+					
+					continue;
+				}
+			}
+				
+		}	
+		return ngoods;
+	}
+
+	public static ArrayList<Good> ownedGood(Mafia m){
+		
+		return (ArrayList<Good>) ownedGood(m,Good.class);
+	}
 	private boolean isNameAvaible(String name) {
 		
 		return !names.contains(name); 
@@ -47,7 +74,7 @@ public abstract class Good implements Field {
 	 * Para modificar su valor se tiene que sobreescribir {@link #getFinalBalance() getFinalBalance}
 	 * @return el balance
 	 */
-	public final float getBaseBalance() {return pay;};
+	public final int getBaseBalance() {return pay;};
 	
 	/**
 	 * Devuelve el nombre del objeto, fancy
@@ -77,7 +104,7 @@ public abstract class Good implements Field {
 	 * Se puede sobreescribir según las necesidades
 	 * @return el balance final
 	 */
-	public float getFinalBalance() {return getBaseBalance();}
+	public int getFinalBalance() {return getBaseBalance();}
 	
 	@Override
 	public void save(ConfigurationSection save) {
@@ -98,9 +125,9 @@ public abstract class Good implements Field {
 		
 		if(pay > 0) 
 			
-			return "" + ChatColor.GREEN + getFinalBalance() + Gang.eco.currencyNamePlural();
+			return "" + ChatColor.GREEN + (int)getFinalBalance() + Gang.eco.currencyNamePlural();
 		else
-			return "" + ChatColor.RED + getFinalBalance() + Gang.eco.currencyNamePlural();
+			return "" + ChatColor.RED + (int)getFinalBalance() + Gang.eco.currencyNamePlural();
 	}
 	
 	/**
@@ -175,7 +202,7 @@ public abstract class Good implements Field {
 		return !isOwned();
 	};
 	
-	public float getBuyPrice() { return Math.abs(pay)*100;}
+	public float getBuyPrice() { return Math.abs(pay)*20;}
 	
 	public void destroy() {
 		

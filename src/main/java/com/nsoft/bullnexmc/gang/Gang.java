@@ -44,6 +44,8 @@ public class Gang {
 		Data = data;
 		load(Data.getConfigurationSection("gang"));
 		initCommands(p);
+		
+		Mafia.payThread.start();
 	}
 	/**
 	 * Devuelve una mafia por su nombre
@@ -245,6 +247,41 @@ public class Gang {
 					if(p.isPromoted()) {
 						SpigotPlugin.sendMessage(sender, "Eres administrador de tu mafia");
 					}
+					Mafia m = p.getMafia();
+					m.SendMafiaMessage(sender,ChatColor.GOLD +  "Lista de jugadores:");
+					
+					for (GangPlayer gang : p.getMafia().players) {
+						
+						m.SendMafiaMessage(sender, "   -" + gang.getName() + ", nivel: " + gang.getLevel());
+					}
+					
+					ArrayList<Good> goods = Good.ownedGood(m);
+					if(goods.size() != 0) {
+						
+						m.SendMafiaMessage(sender, ChatColor.GOLD + "Lista de bienes:");
+						for (Good good : goods) {
+							
+							
+							if(good instanceof Locable) {
+								
+								Locable l = (Locable)good;
+								Location l2 = p.getPlayer().getLocation();
+								
+								int dist = (int) Math.sqrt(		
+										(l.getX() - l2.getBlockX())^2 + 
+										(l.getY() - l2.getBlockY())^2 + 
+										(l.getZ() - l2.getBlockZ())^2		);
+								
+								m.SendMafiaMessage(sender, "   -" + good.getType() + ": " + good.getFancyName() + ", " + good.getChatBalance() + ", " + 
+								ChatColor.GOLD + dist + " bloques");
+								
+							}else {
+								
+								m.SendMafiaMessage(sender, "   -" + good.getType() + ": " + good.getFancyName() + ", " + good.getChatBalance());
+								
+							}
+						}
+					}
 				}else {
 					
 					SpigotPlugin.sendMessage(sender, "No estas en ninguna mafia.",2);
@@ -343,12 +380,15 @@ public class Gang {
 								}else {
 									SpigotPlugin.sendMessage(sender, "No tienes suficiente dinero.");
 									SpigotPlugin.sendMessage(sender, "Tu dinero: " + eco.getBalance(player.getOfflinePlayer())+ eco.currencyNamePlural());
-									SpigotPlugin.sendMessage(sender, "Precio de " + player.getMafia().getName() + ": " + a.getBuyPrice() + eco.currencyNamePlural());
+									SpigotPlugin.sendMessage(sender, "Precio de " + a.getFancyName() + ": " + a.getBuyPrice() + eco.currencyNamePlural());
 								}
 							}else
 								SpigotPlugin.sendMessage(sender, a.getType() + " " + a.getFancyName() + " no esta disponible.");
 						}else
 							SpigotPlugin.sendMessage(sender, "No existe ningún bien en el server con el nombre: " + args[0],2);
+					}else {
+						
+						SpigotPlugin.sendMessage(sender, "No formas parte de ninguna mafia",2);
 					}
 					
 				} catch (Exception e) { Errors.handleException(sender, e);}
@@ -370,7 +410,7 @@ public class Gang {
 				
 				//TODO: Correct creation:
 					
-					Point a = new Point(Integer.parseInt(args[1]), args[0], null, .2f, getGangPlayer(sender.getName()).getPlayer().getLocation());
+					Point a = new Point(Integer.parseInt(args[1]), args[0], null, .2f, getGangPlayer(sender.getName()).getPlayer().getLocation().clone());
 					
 					
 					SpigotPlugin.sendMessage(sender, "Local creado.");

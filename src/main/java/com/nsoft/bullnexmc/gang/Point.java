@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
  * @author DavidNexuss
  *
  */
-public class Point extends Good{
+public class Point extends Good implements Locable{
 	
 	@Override public String getType() {	return "El Local";	}
 	
@@ -25,7 +25,7 @@ public class Point extends Good{
 	
 	static ArrayList<Point> points = new ArrayList<>();
 	
-	public Point(float defaultPay, String name, String displayItem, float bonus,Location loc) {
+	public Point(int defaultPay, String name, String displayItem, float bonus,Location loc) {
 		
 		super(name,defaultPay);
 		this.displayItem = Material.getMaterial(displayItem);
@@ -91,7 +91,7 @@ public class Point extends Good{
 	public void aplyDefaultSubstract() {aplySubstract(0.005f);}
 	public void aplySubstract(float sub) {
 		
-		if(bonus > -range)
+		if(bonus > (-1 * range))
 		bonus -= sub;
 		
 		if(bonus < 0)
@@ -99,10 +99,10 @@ public class Point extends Good{
 	}
 
 	@Override
-	public float getFinalBalance() {
+	public int getFinalBalance() {
 		
 		if(getOperator().isConnected())
-			return super.getFinalBalance()*bonus;
+			return (int) (super.getFinalBalance()* (1 + bonus));
 		else
 			return super.getFinalBalance();
 	}
@@ -139,5 +139,23 @@ public class Point extends Good{
 		// TODO Auto-generated method stub
 		super.own(m, p);
 		m.ownedPoints.add(this);
+	}
+
+	@Override
+	public int getX() {
+		
+		return loc.getBlockX();
+	}
+
+	@Override
+	public int getY() {
+		
+		return loc.getBlockY();
+	}
+
+	@Override
+	public int getZ() {
+		
+		return loc.getBlockZ();
 	}
 }

@@ -27,6 +27,36 @@ public class Mafia implements Field{
 	public ArrayList<GangPlayer> aplyForGangs = new ArrayList<>();
 	public ArrayList<Point> ownedPoints = new ArrayList<>();
 	
+	public static int PaySeconds = 60;
+	
+	static Thread payThread;
+	
+	static {
+		
+		payThread = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				
+				try {
+					
+					while(true) {
+						
+						for (Mafia mafia : mafias) {
+							
+							mafia.PayAll();
+							Thread.sleep(PaySeconds*1000);
+						}
+					}
+					
+				} catch (Exception e) {
+					
+					SpigotPlugin.BroadCast("Error in pay Thread!");
+				}
+			}
+		});
+	}
 	@Override
 	public void save(ConfigurationSection save) {
 		
@@ -114,7 +144,7 @@ public class Mafia implements Field{
 			
 			if(pl.isConnected()) {
 				
-				SendMafiaMessage(pl.getPlayer(), "      Tramitando cobro...");
+				SendMafiaMessage(pl.getPlayer(), ChatColor.GOLD + "" + "Tramitando cobro...");
 				SendMafiaMessage(pl.getPlayer(), "---------------------------------");
 			}
 		}
@@ -134,22 +164,23 @@ public class Mafia implements Field{
 				
 				if(point.getBonus() > 0 ) {
 					
-					bonus= ChatColor.GREEN + "(" + (point.getBonus()*100) + "%)";
+					bonus= ChatColor.GREEN + "(" + (int)(point.getBonus()*100) + "%)";
 				}else {
 					
-					bonus= ChatColor.RED + "(" + (point.getBonus()*100) + "%)";
+					bonus= ChatColor.RED + "(" + (int)(point.getBonus()*100) + "%)";
 				}
 				
-				SendMafiaMessage(point.getOperator().getPlayer(), "Recibes " + ChatColor.GREEN + pay*.3f + eco.currencyNamePlural() + " por ser operador" + ChatColor.GREEN + " (30%)");
+				SendMafiaMessage(point.getOperator().getPlayer(), "Recibes " + ChatColor.GREEN + (int)(pay*.3f) + " " + eco.currencyNamePlural() + " por ser operador" + ChatColor.GREEN + " (30%)");
 				
 				point.getOperator().pay(pay*.3f);
 				Gang.eco.depositPlayer(point.getOperator().getOfflinePlayer(), pay * .3f);
+				point.aplyDefaultSubstract();
 			
 			}
 			
 			sendToAll("Bonus por operaciones " + bonus, 
 					"El operador actual es: " + point.getOperator().getName(),
-					"Beneficios netos: " + ChatColor.GREEN + pay + eco.currencyNamePlural());
+					"Beneficios netos: " + ChatColor.GREEN + (int)pay + " " +eco.currencyNamePlural());
 			
 			Balance += pay*.3f;
 			float rp = pay*.4f;
@@ -164,17 +195,17 @@ public class Mafia implements Field{
 				
 				if(!pl.isConnected()) continue;
 				
-				float payI = rp * (pl.getLevel()/total);
+				int payI = (int)(rp * (pl.getLevel()/total));
 				pl.pay(payI);
 				Gang.eco.depositPlayer(pl.getOfflinePlayer(),payI);
-				SendMafiaMessage(pl.getPlayer(), "Recibes un " + ChatColor.GREEN + "(" + (pl.getLevel()/total)*100 + "%)" +ChatColor.DARK_PURPLE + " del 40% a repartir",
-						"Recibes un " + ChatColor.GREEN + (.4f * (pl.getLevel()/total))*100 + "% " + ChatColor.DARK_PURPLE + "recibes " + ChatColor.GREEN + payI + eco.currencyNamePlural());
+				SendMafiaMessage(pl.getPlayer(), "Recibes un " + ChatColor.GREEN + "(" + (int)((pl.getLevel()/total)*100) + "%)" +ChatColor.DARK_PURPLE + " del 40% a repartir",
+						"Recibes un " + ChatColor.GREEN + (int)((.4f * (pl.getLevel()/total))*100) + "% " + ChatColor.DARK_PURPLE + "recibes " + ChatColor.GREEN + payI + eco.currencyNamePlural());
 				
 				int lvl = pl.getLevel();
 				pl.addXP(payI/2);
 				
 				if(lvl != pl.getLevel()) 
-					SendMafiaMessage(pl.getPlayer(), "Has subido de nivel! " + ChatColor.GREEN + pl.getLevel());
+					SendMafiaMessage(pl.getPlayer(), ChatColor.GOLD + ""  +ChatColor.BOLD + "Has subido de nivel! " + ChatColor.GREEN + pl.getLevel());
 			}
 		}
 		
@@ -183,7 +214,7 @@ public class Mafia implements Field{
 			if(pl.isConnected()) {
 				
 				SendMafiaMessage(pl.getPlayer(),ChatColor.BLACK +  "#############################");
-				SendMafiaMessage(pl.getPlayer(), "Sumatorio de todos los pagos: ");
+				SendMafiaMessage(pl.getPlayer(), ChatColor.GOLD + "Sumatorio de todos los pagos: ");
 				String[] list = pl.retrieveList();
 				
 				for (String string : list) {

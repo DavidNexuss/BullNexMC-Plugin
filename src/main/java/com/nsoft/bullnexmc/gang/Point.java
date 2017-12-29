@@ -52,9 +52,11 @@ public class Point extends Good implements Locable{
 	
 	public static Point create(ConfigurationSection sec) {
 		
-		return new Point(sec.getInt("pay"), sec.getString("name"), sec.getString("display"), (float)sec.getDouble("bonus"),
+		Point a = new Point(sec.getInt("pay"), sec.getName(), sec.getString("display"), (float)sec.getDouble("bonus"),
 				new Location(SpigotPlugin.plugin.getServer().getWorld(sec.getString("location.world")), 
 							sec.getInt("location.x"), sec.getInt("location.y"), sec.getInt("location.z")));
+		a.link();
+		return a;
 		
 	}
 	/**

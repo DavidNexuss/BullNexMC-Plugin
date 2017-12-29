@@ -1,5 +1,7 @@
 package com.nsoft.bullnexmc.gang;
 
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter.DEFAULT;
+
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
@@ -14,5 +16,14 @@ public interface Field{
 	 */
 	//TODO: Remove this public modifier because scurity problems
 	public void save(ConfigurationSection save);
+	public String getName();
+	public String dataType();
 	
+	public default void saveField(ConfigurationSection Data) {
+		
+		if(Data.getConfigurationSection(dataType() + "." + getName()) == null)
+			Data.createSection(dataType() + "." + getName());
+		
+		save(Data.getConfigurationSection(dataType() + "." + getName()));
+	}
 }

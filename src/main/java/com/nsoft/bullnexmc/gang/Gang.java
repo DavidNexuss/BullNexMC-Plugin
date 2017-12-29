@@ -67,7 +67,7 @@ public class Gang {
 	public static Good getGood(String goodName) {
 		
 		for (Good good : Good.goods) {
-			if(good.getBaseName().equals(goodName)) {		
+			if(good.getName().equals(goodName)) {		
 				return good;
 			}
 		}
@@ -622,9 +622,16 @@ public class Gang {
 	 */
 	static void load(ConfigurationSection section) {
 		
-		//TODO: Load procedure
+		//TODO: Load procedure NOT ENDED!
 		for (String a : section.getKeys(false)) {
 			
+			if(a.equals("mafias")) {
+				
+				for (String b : section.getConfigurationSection("players").getKeys(false)) {
+					
+					players.add(GangPlayer.create(section.getConfigurationSection(b), null));
+				}
+			}
 		}
 	}
 	/**
@@ -634,24 +641,15 @@ public class Gang {
 		
 		for (int i = 0; i < Good.goods.size(); i++) {
 			
-			if(Data.getConfigurationSection("good." + i) == null) 	
-				Data.createSection("good." + i);
-			
-			Good.goods.get(i).save(Data.getConfigurationSection("good." + i));
+			Good.goods.get(i).saveField(Data);
 		}
 		for (int i = 0; i < players.size(); i++) {
-	
-			if(Data.getConfigurationSection("players." + i) == null) 	
-				Data.createSection("players." + i);
-			
-			players.get(i).save(Data.getConfigurationSection("players." + i));
+
+			players.get(i).saveField(Data);
 		}
 		for (int i = 0; i < mafias.size(); i++) {
 			
-			if(Data.getConfigurationSection("mafias." + i) == null) 	
-				Data.createSection("mafias." + i);
-			
-			mafias.get(i).save(Data.getConfigurationSection("mafias." + i));
+			mafias.get(i).saveField(Data);
 		}
 		
 		plugin.saveConfig();

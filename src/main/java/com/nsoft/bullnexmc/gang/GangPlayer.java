@@ -19,6 +19,9 @@ import static com.nsoft.bullnexmc.gang.Gang.*;
  */
 public class GangPlayer implements Field{
 	
+	@Override
+	public String dataType() { return "players"; }
+	
 	private static int maxjoin = 5;
 	private OfflinePlayer p;			  /** Reflaja un objto {@link OfflinePlayer} del jugador*/
 	private Mafia mafia;				  /** Acceso a la mafia del jugador {@link Mafia}*/
@@ -44,7 +47,6 @@ public class GangPlayer implements Field{
 	@Override
 	public void save(ConfigurationSection save) {
 		
-		save.set("name", getName());
 		save.set("level", lvl);
 		save.set("xp", xp);
 		save.set("isBanned", masterBan);
@@ -53,8 +55,7 @@ public class GangPlayer implements Field{
 	
 	public static GangPlayer create(ConfigurationSection sec,Mafia m) {
 		
-
-		GangPlayer a = new GangPlayer(Dictionary.getPlayerUUID(sec.getString("name")), 
+		GangPlayer a = new GangPlayer(Dictionary.getPlayerUUID(sec.getName()), 
 						m, sec.getInt("level"), sec.getInt("xp"));
 		a.joinCount = sec.getInt("join");
 		if(sec.getBoolean("isBanned")) a.banProfile();
@@ -122,9 +123,11 @@ public class GangPlayer implements Field{
 	 * @return Devuelve true si el jugador esta conectado
 	 */
 	public boolean isConnected() { return p.isOnline() || isAble();}
+	
 	/**
 	 * @return Devuelve el nombre del jugador
 	 */
+	@Override
 	public String getName() {return p.getName();}
 
 	/**

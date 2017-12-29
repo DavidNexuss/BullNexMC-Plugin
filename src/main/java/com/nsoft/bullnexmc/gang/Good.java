@@ -14,11 +14,14 @@ import net.milkbowl.vault.economy.Economy;
  * @author DavidNexuss
  * @param 
  */
-public abstract class Good implements Field {
+public abstract class Good implements Field{
 
+	@Override
+	public String dataType() {return "good";}
+	
 	private String name;
 	private int pay;
-	
+	private boolean linked = false;
 	private static ArrayList<String> names = new ArrayList<>();
 	
 	private Mafia m;
@@ -86,8 +89,8 @@ public abstract class Good implements Field {
 	 * Devuelve el nombre del objeto
 	 * @return el nombre
 	 */
-	public final String getBaseName() {return name;};
-	
+	@Override
+	public final String getName() { return name;}
 	/**
 	 * Devuelve el nombre del objeto
 	 * @return el nombre
@@ -110,11 +113,15 @@ public abstract class Good implements Field {
 	public void save(ConfigurationSection save) {
 		
 		save.set("type", getClass());
-		save.set("name", name);
 		save.set("pay", pay);
 		save.set("operator", operator.getName());
 	}
 	
+	public void link() {
+	
+		if(linked) return;
+		own(getOperator().getMafia(), getOperator());
+	}
 	/**
 	 * Devuelve el balance en un String con formato, por ejemplo:
 	 * Si el balance es de 100 la funcion devolvera:

@@ -3,6 +3,8 @@ package com.nsoft.bullnexmc.gang;
 import java.lang.management.GarbageCollectorMXBean;
 import java.util.ArrayList;
 
+import javax.swing.text.StyledEditorKit.ForegroundAction;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -16,6 +18,9 @@ import static com.nsoft.bullnexmc.gang.Gang.*;
  *
  */
 public class Mafia implements Field{
+	
+	@Override
+	public String dataType() {return "mafias";}
 	
 	public String name;
 	private int Balance;
@@ -69,20 +74,41 @@ public class Mafia implements Field{
 		
 		for(int i = 0; i < ownedPoints.size(); i++) {
 			
-			points[i] = ownedPoints.get(i).getBaseName();
+			points[i] = ownedPoints.get(i).getName();
 		}
-		
-		save.set("points", points);
 		
 		//PLAYERS
-		String[] pls = new String[players.size()];
+		save.set("players", getList(players));
 		
-		for(int i = 0; i < players.size(); i++) {
+		//PROMOTEDS
+		save.set("promoteds",getList(players));
+		
+		
+	}
+	
+	public static Mafia create(ConfigurationSection sec) {
+		
+		Mafia m = new Mafia(sec.getName(), ChatColor.valueOf(sec.getString("color")), sec.getInt("balance"));
+		for (String a : sec.getConfigurationSection("players").getKeys(false)) {
 			
-			points[i] = players.get(i).getName();
+			m.addPlayer(Gang.getGangPlayer(a));
+		}
+		for (String s : sec.getConfigurationSection("promoteds").getKeys(false)) {
+			
+			m.forcePromote(Gang.getGangPlayer(s));
 		}
 		
-		save.set("players", pls);
+		return m;
+	}
+	public static String[] getList(ArrayList<?> list) {
+		
+		String[] l = new String[list.size()];
+		for (int i = 0; i < l.length; i++) {
+			
+			if(list.get(i) instanceof Field)l[i] = ((Field)list.get(i)).getName();
+		}
+		
+		return l;
 	}
 	public Mafia(String name,ChatColor col,int Balance) {
 		
@@ -371,6 +397,8 @@ public class Mafia implements Field{
 		
 		return isPromoted && p.isConnected();
 	}
+	
+	public void forcePromote(GangPlayer p) { promote(p, null, true);}
 	public void promote(GangPlayer player,GangPlayer promoted,boolean force) {
 		
 		if(player.getMafia() != this) return;

@@ -16,6 +16,7 @@ import com.nsoft.bullnexmc.SpigotPlugin;
 public class Dictionary implements Listener {
 
 	private static HashMap<String, UUID> Offlines = new HashMap<>();
+	private static boolean changes = false;
 	private static Thread AutoSave;
 	
 	static {
@@ -59,6 +60,8 @@ public class Dictionary implements Listener {
 	
 	public static void save(ConfigurationSection inf) {
 		
+		if(!changes) return;
+		
 		if(inf == null) {
 			
 			SpigotPlugin.plugin.getConfig().createSection("dic");
@@ -70,6 +73,7 @@ public class Dictionary implements Listener {
 		}
 		
 		SpigotPlugin.plugin.saveConfig();
+		changes = false;
 	}
 	
 	public static UUID getPlayerUUID(String name) {
@@ -84,6 +88,7 @@ public class Dictionary implements Listener {
 		if(!Offlines.containsKey(event.getPlayer().getName())) {
 			
 			Offlines.put(event.getPlayer().getName(), event.getPlayer().getUniqueId());
+			changes = true;
 		}
 		
 	}

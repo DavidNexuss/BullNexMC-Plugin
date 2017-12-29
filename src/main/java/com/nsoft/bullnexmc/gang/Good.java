@@ -109,6 +109,7 @@ public abstract class Good implements Field {
 	@Override
 	public void save(ConfigurationSection save) {
 		
+		save.set("type", getClass());
 		save.set("name", name);
 		save.set("pay", pay);
 		save.set("operator", operator.getName());

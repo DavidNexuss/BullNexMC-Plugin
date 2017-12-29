@@ -1,5 +1,6 @@
 package com.nsoft.bullnexmc.gang;
 
+import java.awt.RenderingHints.Key;
 import java.util.ArrayList;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -621,10 +622,13 @@ public class Gang {
 	 */
 	static void load(ConfigurationSection section) {
 		
-		
+		//TODO: Load procedure
+		for (String a : section.getKeys(false)) {
+			
+		}
 	}
 	/**
-	 * Guarda todo los objtos relacionados con el plugin en un YML
+	 * Guarda todo los objetos relacionados con el plugin en un YML
 	 */
 	public static void save() {
 		

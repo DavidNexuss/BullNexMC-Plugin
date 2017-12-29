@@ -64,6 +64,7 @@ public class Mafia implements Field{
 		save.set("color", color.name());
 		save.set("balance", Balance);
 		
+		//POINTS
 		String[] points = new String[ownedPoints.size()];
 		
 		for(int i = 0; i < ownedPoints.size(); i++) {
@@ -73,6 +74,7 @@ public class Mafia implements Field{
 		
 		save.set("points", points);
 		
+		//PLAYERS
 		String[] pls = new String[players.size()];
 		
 		for(int i = 0; i < players.size(); i++) {

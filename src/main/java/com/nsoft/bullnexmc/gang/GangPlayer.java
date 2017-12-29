@@ -47,8 +47,19 @@ public class GangPlayer implements Field{
 		save.set("name", getName());
 		save.set("level", lvl);
 		save.set("xp", xp);
+		save.set("isBanned", masterBan);
+		save.set("join", joinCount);
 	}
 	
+	public static GangPlayer create(ConfigurationSection sec,Mafia m) {
+		
+
+		GangPlayer a = new GangPlayer(Dictionary.getPlayerUUID(sec.getString("name")), 
+						m, sec.getInt("level"), sec.getInt("xp"));
+		a.joinCount = sec.getInt("join");
+		if(sec.getBoolean("isBanned")) a.banProfile();
+		return a;
+	}
 	void pay(float p) {
 		
 		pay.add(p);

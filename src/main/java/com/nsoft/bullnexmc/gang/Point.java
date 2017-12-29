@@ -4,8 +4,11 @@ import java.util.ArrayList;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+
+import com.nsoft.bullnexmc.SpigotPlugin;
 
 /**
  * 
@@ -41,9 +44,18 @@ public class Point extends Good implements Locable{
 		super.save(save);
 		save.set("display", displayItem.name());
 		save.set("bonus", bonus);
+		save.set("location.world", loc.getWorld().getName());
 		save.set("location.x", loc.getBlockX());
 		save.set("location.y", loc.getBlockY());
 		save.set("location.z", loc.getBlockZ());
+	}
+	
+	public static Point create(ConfigurationSection sec) {
+		
+		return new Point(sec.getInt("pay"), sec.getString("name"), sec.getString("display"), (float)sec.getDouble("bonus"),
+				new Location(SpigotPlugin.plugin.getServer().getWorld(sec.getString("location.world")), 
+							sec.getInt("location.x"), sec.getInt("location.y"), sec.getInt("location.z")));
+		
 	}
 	/**
 	 * Crea la estructura virtual del local
@@ -189,4 +201,6 @@ public class Point extends Good implements Locable{
 		
 		return loc.getBlockZ();
 	}
+
+	
 }

@@ -9,7 +9,7 @@ import org.bukkit.configuration.ConfigurationSection;
  * @author DavidNexuss
  *
  */
-public interface Field{
+public interface DataField{
 	/**
 	 * Guarda el objeto
 	 * @param save El objeto {@link ConfigurationSection} que refleja la sección del archivo YML donde se quiere guardar el objeto

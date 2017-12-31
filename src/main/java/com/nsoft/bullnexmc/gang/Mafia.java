@@ -17,7 +17,7 @@ import static com.nsoft.bullnexmc.gang.Gang.*;
  * @author DavidNexuss
  *
  */
-public class Mafia implements Field{
+public class Mafia implements DataField{
 	
 	@Override
 	public String dataType() {return "mafias";}
@@ -106,7 +106,7 @@ public class Mafia implements Field{
 		String[] l = new String[list.size()];
 		for (int i = 0; i < l.length; i++) {
 			
-			if(list.get(i) instanceof Field)l[i] = ((Field)list.get(i)).getName();
+			if(list.get(i) instanceof DataField)l[i] = ((DataField)list.get(i)).getName();
 		}
 		
 		return l;

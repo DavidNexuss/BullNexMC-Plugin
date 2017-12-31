@@ -14,7 +14,7 @@ import net.milkbowl.vault.economy.Economy;
  * @author DavidNexuss
  * @param 
  */
-public abstract class Good implements Field{
+public abstract class Good implements DataField{
 
 	@Override
 	public String dataType() {return "good";}

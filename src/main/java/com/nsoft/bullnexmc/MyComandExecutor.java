@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 
 public abstract class MyComandExecutor implements CommandExecutor {
 
-	public String commandname;
+	private String commandname;
 	public MyComandExecutor(String name) {
 		
 		commandname = name;
@@ -20,5 +20,10 @@ public abstract class MyComandExecutor implements CommandExecutor {
 		return true;
 		else
 		return false;
+	}
+	
+	public String getName() {
+		
+		return commandname;
 	}
 }

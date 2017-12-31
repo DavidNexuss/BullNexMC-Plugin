@@ -1,5 +1,6 @@
 package com.nsoft.bullnexmc.gang;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -12,10 +13,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.nsoft.bullnexmc.SpigotPlugin;
+import com.nsoft.misc.Profile;
 
 public class Dictionary implements Listener {
 
-	private static HashMap<String, UUID> Offlines = new HashMap<>();
+	private static HashMap<String, Profile> Offlines = new HashMap<>();
 	private static boolean changes = false;
 	private static Thread AutoSave;
 	
@@ -54,7 +56,8 @@ public class Dictionary implements Listener {
 		
 		for (String key : inf.getKeys(false)) {
 			
-			Offlines.put(key, (UUID) inf.get(key));
+			Profile p = new Profile();
+			Offlines.put(key, (Profile) inf.get(key));
 		}
 	}
 	
@@ -78,7 +81,12 @@ public class Dictionary implements Listener {
 	
 	public static UUID getPlayerUUID(String name) {
 		
-		return Offlines.get(name);	
+		return Offlines.get(name).uuid;	
+	}
+	
+	public static Profile getProfile(String name) {
+		
+		return Offlines.get(name);
 	}
 	
 	//TODO: PLAYER LOGIN !!!!!!!!!
@@ -87,7 +95,9 @@ public class Dictionary implements Listener {
 		
 		if(!Offlines.containsKey(event.getPlayer().getName())) {
 			
-			Offlines.put(event.getPlayer().getName(), event.getPlayer().getUniqueId());
+			Profile p = new Profile();
+			p.uuid = event.getPlayer().getUniqueId();
+			Offlines.put(event.getPlayer().getName(), p);
 			changes = true;
 		}
 		

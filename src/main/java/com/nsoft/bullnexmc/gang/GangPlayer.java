@@ -17,7 +17,7 @@ import static com.nsoft.bullnexmc.gang.Gang.*;
  * @author Usuari
  *
  */
-public class GangPlayer implements Field{
+public class GangPlayer implements DataField{
 	
 	@Override
 	public String dataType() { return "players"; }

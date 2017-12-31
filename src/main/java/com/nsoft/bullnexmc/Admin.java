@@ -213,6 +213,7 @@ public class Admin {
 			 } return true;
 		}
 	}
+	
 	static class BroadCast extends MyComandExecutor{
 
 		public BroadCast(String name) {

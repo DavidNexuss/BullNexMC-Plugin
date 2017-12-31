@@ -123,6 +123,18 @@ commands:
        description: Congela a tus enemigos! Muhahahha (Solo OP)
        permission: bullnexmc.update
        usage: /<command> <Enemigo>
+    big-freeze:
+       description: Congela el agua
+       permission: bullnexmc.normal
+       usage: /<command> 
+    power:
+       description: Cambia los permisos de superpoderes
+       permission: bullnexmc.normal
+       usage: /<command> <persona> <state>
+    powers:
+       description: Lista los superpoderes
+       permission: bullnexmc.normal
+       usage: /<command> 
     virus:
        description: Fuck enemies (Solo OP)
        permission: bullnexmc.update

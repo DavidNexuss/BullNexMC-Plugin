@@ -112,9 +112,9 @@ public abstract class Good implements Field{
 	@Override
 	public void save(ConfigurationSection save) {
 		
-		save.set("type", getClass());
+		save.set("type", getClass().getName());
 		save.set("pay", pay);
-		save.set("operator", operator.getName());
+		save.set("operator", getOperatorName());
 	}
 	
 	public void link() {
@@ -201,6 +201,12 @@ public abstract class Good implements Field{
 		
 		operator = null;
 		getMafia().broadcast("El operador de " + getFancyName() + " ha sido revocado de sus funciones!");
+	}
+	
+	public String getOperatorName() {
+		
+		if(getOperator() == null) return null;
+		else return getOperator().getName();
 	}
 	/**
 	 * @return

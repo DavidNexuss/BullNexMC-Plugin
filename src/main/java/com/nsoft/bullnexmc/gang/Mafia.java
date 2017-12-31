@@ -33,7 +33,7 @@ public class Mafia implements Field{
 	public ArrayList<Point> ownedPoints = new ArrayList<>();
 	
 	public static int PaySeconds = 60;
-	
+	static boolean payThreadAble = true;
 	static Thread payThread;
 	
 	static {
@@ -48,10 +48,12 @@ public class Mafia implements Field{
 					
 					while(true) {
 						
+						Thread.sleep(PaySeconds*1000);
+						if(!payThreadAble) continue;
 						for (Mafia mafia : mafias) {
 							
 							mafia.PayAll();
-							Thread.sleep(PaySeconds*1000);
+							
 						}
 					}
 					
@@ -65,7 +67,6 @@ public class Mafia implements Field{
 	@Override
 	public void save(ConfigurationSection save) {
 		
-		save.set("name", name);
 		save.set("color", color.name());
 		save.set("balance", Balance);
 		
@@ -167,6 +168,7 @@ public class Mafia implements Field{
 		p.sendMessage(ChatColor.GREEN + "[Mafia " + name + "]" + ChatColor.DARK_PURPLE + text);
 	}
 	public void PayAll() {
+		
 		
 		for (GangPlayer pl : players) {
 			

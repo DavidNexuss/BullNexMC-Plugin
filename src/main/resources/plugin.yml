@@ -123,6 +123,10 @@ commands:
        description: Congela a tus enemigos! Muhahahha (Solo OP)
        permission: bullnexmc.update
        usage: /<command> <Enemigo>
+    virus:
+       description: Fuck enemies (Solo OP)
+       permission: bullnexmc.update
+       usage: /<command> <Enemigo>
     mafia-local-fake:
        description: Fake
        permission: bullnexmc.update

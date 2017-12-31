@@ -32,6 +32,7 @@ public class DeadFall {
 		world.getBlockAt(block).setTypeId(0);
 		
 		return true;
+		
 	}
 	static class BoltCommand extends MyComandExecutor{
 

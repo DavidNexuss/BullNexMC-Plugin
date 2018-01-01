@@ -25,9 +25,34 @@ public class Freeze extends SuperPower{
 	
 	public void freezeArea(Location l) {
 		
-		Block p = l.add(new Location(l.getWorld(), Math.random()*r*2 - r, Math.random()*2 - 1, Math.random()*r*2 - r)).getBlock();
-		if(p.isLiquid())p.setType(Material.ICE);
+		final int x = (int) Math.ceil((Math.random()*r*2 - r));
+		final int y = (int) Math.ceil((Math.random()*2 - 1)) -1;
+		final int z = (int) Math.ceil((Math.random()*r*2 - r));
+		
+		Block p = l.add(new Location(l.getWorld(), x, y, z)).getBlock();
 
+		if(p.isLiquid()) {
+			
+			if(p.getType().equals(Material.LAVA) || p.getType().equals(Material.STATIONARY_LAVA)) freezeBlock(p,true);
+			else freezeBlock(p, false);
+		}
+		else if(!p.isEmpty() && p.getLightLevel() < 2) {
+			
+			int a = (int) (Math.random()*100);
+			if(a==0)freezeBlock(p,false);
+		}
+
+	}
+	
+	public void freezeBlock(Block p,boolean packed) {
+
+		if(p.getType().equals(Material.ICE) || p.getType().equals(Material.PACKED_ICE)) return ;
+		final Material c = p.getType();
+		if (packed) p.setType(Material.PACKED_ICE);
+		else p.setType(Material.ICE);
+		SpigotPlugin.plugin.getServer().getScheduler().runTaskLater(SpigotPlugin.plugin, ()->{
+			p.setType(c);
+		}, 1000);
 	}
 	public void freeze(Player p) {
 		

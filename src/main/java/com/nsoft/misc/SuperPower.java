@@ -59,6 +59,7 @@ public abstract class SuperPower extends MyComandExecutor{
 		// TODO Auto-generated method stub
 		if(!super.onCommand(sender, command, label, args))return true;
 		if(Dictionary.getProfile(sender.getName()).hasPermission(getName()))return true;
+		SpigotPlugin.sendMessage(sender, "No tienes permiso para usar el superpoder: " + getName(),2);
 		return false;
 	}
 	

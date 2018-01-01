@@ -16,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.avaje.ebeaninternal.server.subclass.GetterSetterMethods;
 import com.nsoft.bullnexmc.gang.Gang;
 import com.nsoft.misc.Freeze;
+import com.nsoft.misc.Magma;
 import com.nsoft.misc.SuperPower;
 
 import net.md_5.bungee.api.ChatColor;
@@ -136,6 +137,7 @@ public class SpigotPlugin extends JavaPlugin implements Listener {
     	getServer().broadcast( ChatColor.GREEN +"[BullNexRP] " + ChatColor.BLUE + "Plugin iniciado!", "bullnexmc.update");
         // Commands enabled with following method must have entries in plugin.yml
     	
+    	getCommand("magma").setExecutor(new Magma("magma"));
     	getCommand("big-freeze").setExecutor(new Freeze("big-freeze"));
     	getCommand("power").setExecutor(new SuperPower.Power("power"));
     	getCommand("powers").setExecutor(new SuperPower.ListPowers("powers"));

@@ -126,7 +126,11 @@ commands:
     big-freeze:
        description: Congela el agua
        permission: bullnexmc.normal
-       usage: /<command> 
+       usage: /<command>
+    magma:
+       description: Crea columnas
+       permission: bullnexmc.normal
+       usage: /<command>  
     power:
        description: Cambia los permisos de superpoderes
        permission: bullnexmc.normal

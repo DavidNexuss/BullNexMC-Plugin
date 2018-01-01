@@ -46,12 +46,13 @@ public class Freeze extends SuperPower{
 	
 	public void freezeBlock(Block p,boolean packed) {
 
-		if(p.getType().equals(Material.ICE) || p.getType().equals(Material.PACKED_ICE)) return ;
+		if(p.getType().equals(Material.ICE) || p.getType().equals(Material.PACKED_ICE) || p.getType().equals(Material.FURNACE)) return;
 		final Material c = p.getType();
+		final byte data = p.getData();
 		if (packed) p.setType(Material.PACKED_ICE);
 		else p.setType(Material.ICE);
 		SpigotPlugin.plugin.getServer().getScheduler().runTaskLater(SpigotPlugin.plugin, ()->{
-			p.setType(c);
+			p.setTypeIdAndData(c.getId(), data, false);
 		}, 1000);
 	}
 	public void freeze(Player p) {

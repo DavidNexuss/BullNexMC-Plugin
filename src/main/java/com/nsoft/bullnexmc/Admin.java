@@ -47,7 +47,10 @@ public class Admin {
 			
 			try {
 			    
-				new File("plugins/" + args[0] + ".jar").delete();
+				SpigotPlugin.sendMessage(sender, "" + new File("plugins/" + args[0] + ".jar").getAbsolutePath());
+				
+				if(!new File("plugins/" + args[0] + ".jar").delete()) throw new Exception();
+				SpigotPlugin.sendMessage(sender, "Plugin " + args[0] + "  borrado con exito.");
 			} catch (Exception x) {
 				
 			    SpigotPlugin.sendMessage(sender, "No existe " + "plugins/" + args[0] + ".jar O hubo un error",2);
@@ -87,6 +90,8 @@ public class Admin {
 				return true;
 				
 			}
+			 
+			 SpigotPlugin.sendMessage(sender, "Plugin " + args[0] + " descargado correctamente.");
 			 return true;
 		}
 	}

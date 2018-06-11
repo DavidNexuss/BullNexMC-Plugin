@@ -32,6 +32,9 @@ public class GangPlayer implements DataField{
 	private int joinCount = 0;
 	
 	private boolean masterBan = false;
+	
+	public int bankmoney;
+	
 	public GangPlayer(UUID uid,Mafia m,int lvl,int xp) {
 		
 		this.p = SpigotPlugin.plugin.getServer().getOfflinePlayer(uid);
@@ -51,6 +54,7 @@ public class GangPlayer implements DataField{
 		save.set("xp", xp);
 		save.set("isBanned", masterBan);
 		save.set("join", joinCount);
+		save.set("bankmoney", bankmoney);
 	}
 	
 	public static GangPlayer create(ConfigurationSection sec,Mafia m) {

@@ -33,11 +33,7 @@ public class SpigotPlugin extends JavaPlugin implements Listener {
         // Don't log disabling, Spigot does that for you automatically!
     }
 
-    @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event) {
-    	
-    	DBall.onBlockPlaced(event.getBlock());
-    }
+    
     @EventHandler
 	public void onPostLogin(PlayerJoinEvent event) {
 		
@@ -53,7 +49,6 @@ public class SpigotPlugin extends JavaPlugin implements Listener {
     		
     	}
     	
-    	DBall.onConnection(p);
 	}
     public static void BroadCast(String msg) {
     	
@@ -145,9 +140,7 @@ public class SpigotPlugin extends JavaPlugin implements Listener {
     	getCommand("freeze").setExecutor(new Admin.Freeze("freeze"));
     	getCommand("bn-remove").setExecutor(new Admin.RemovePlugin("bn-remove"));
     	getCommand("bn-download").setExecutor(new Admin.Download("bn-download"));
-    	getCommand("radar").setExecutor(new DBall.radar("radar"));
     	getCommand("spawn").setExecutor(new Admin.Spawn("spawn"));
-    	getCommand("bn-dropbetadragonballs").setExecutor(new DBall.BetaDragonBalls("bn-dropbetadragonballs"));
     	getCommand("bn-broad").setExecutor(new Admin.BroadCast("bn-broad"));
     	getCommand("bn-bolt").setExecutor(new DeadFall.BoltCommand("bn-bolt"));
         getCommand("bn-drop").setExecutor(new DeadFall.DropCommand("bn-drop"));

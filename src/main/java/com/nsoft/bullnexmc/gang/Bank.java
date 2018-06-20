@@ -15,6 +15,35 @@ public class Bank {
 
 	
 	public static String B = ChatColor.BLUE + "[BANCO]" + ChatColor.WHITE;
+	
+	public static class SetInterest extends MyComandExecutor{
+		
+		public SetInterest(String name) {
+			
+			super(name);
+		}
+		
+		@Override
+		public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+			
+			if(!super.onCommand(sender, command, label, args)) return true;
+			
+			if(!sender.isOp()) { SpigotPlugin.NotOPMessage(sender); return true;}
+			
+			if(args.length != 1) { SpigotPlugin.sendMessage(sender, "Parámetros incorrectos",2); return true;}
+			
+			float inte = Float.parseFloat(args[0]);
+			float old = BankUser.getInterest();
+			
+			BankUser.setNewInterest(inte/100f);
+			
+			SpigotPlugin.sendMessage(sender, "Interes cambiado: " + ChatColor.RED + old*100 + "%"
+					+ ChatColor.YELLOW + " -> " + ChatColor.GREEN + inte + "%");
+			
+			
+			return true;
+		}
+	}
 	public static class SetBankPosition extends MyComandExecutor{
 		
 		public SetBankPosition(String name) {

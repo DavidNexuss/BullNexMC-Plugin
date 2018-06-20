@@ -163,6 +163,10 @@ commands:
        description: Establece los puntos de gestiones bancarias (Solo OP)
        permission: bullnexmc.update
        usage: /<command>
+    banksetint:
+       description: Establece el interes (en %, solo OP)
+       permission: bullnexmc.update
+       usage: /<command> <amount>
     bankstatus:
        description: Comprueba tu saldo y otra informacion de tu cuenta
        permission: bullnexmc.normal

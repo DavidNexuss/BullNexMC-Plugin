@@ -139,6 +139,7 @@ public class SpigotPlugin extends JavaPlugin implements Listener {
     	getCommand("bankdeposit").setExecutor(new Bank.DepositMoney("bankdeposit"));
     	getCommand("bankwithdraw").setExecutor(new Bank.WithDrawMoney("bankwithdraw"));
     	getCommand("banksetlocation").setExecutor(new Bank.SetBankPosition("banksetlocation"));
+    	getCommand("banksetint").setExecutor(new Bank.SetInterest("banksetint"));
     	getCommand("bankstatus").setExecutor(new Bank.MoneyStatus("bankstatus"));
     	  
     	getCommand("magma").setExecutor(new Magma("magma"));

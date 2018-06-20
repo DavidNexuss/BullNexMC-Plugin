@@ -14,6 +14,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.avaje.ebeaninternal.server.subclass.GetterSetterMethods;
+import com.nsoft.bullnexmc.gang.Bank;
+import com.nsoft.bullnexmc.gang.BankUser;
 import com.nsoft.bullnexmc.gang.Gang;
 import com.nsoft.misc.Freeze;
 import com.nsoft.misc.Magma;
@@ -40,7 +42,7 @@ public class SpigotPlugin extends JavaPlugin implements Listener {
     	Player p = event.getPlayer();
     	if(event.getPlayer().hasPlayedBefore()) {
     		
-    		sendMessage(p,"Bienvenido " + p,0);
+    		sendMessage(p,"Bienvenido " + p.getName(),0);
     	}else {
     		
     		sendMessage(p, "Bienvenido a BullNexMC!",2);
@@ -129,9 +131,16 @@ public class SpigotPlugin extends JavaPlugin implements Listener {
     	Update a = new Update();
     	
     	Gang.init(getConfig(), this);
+    	BankUser.init();
     	getServer().broadcast( ChatColor.GREEN +"[BullNexRP] " + ChatColor.BLUE + "Plugin iniciado!", "bullnexmc.update");
         // Commands enabled with following method must have entries in plugin.yml
     	
+    	getCommand("bankcreate").setExecutor(new Bank.CreateBankUser("bankcreate"));
+    	getCommand("bankdeposit").setExecutor(new Bank.DepositMoney("bankdeposit"));
+    	getCommand("bankwithdraw").setExecutor(new Bank.WithDrawMoney("bankwithdraw"));
+    	getCommand("banksetlocation").setExecutor(new Bank.SetBankPosition("banksetlocation"));
+    	getCommand("bankstatus").setExecutor(new Bank.MoneyStatus("bankstatus"));
+    	  
     	getCommand("magma").setExecutor(new Magma("magma"));
     	getCommand("big-freeze").setExecutor(new Freeze("big-freeze"));
     	getCommand("power").setExecutor(new SuperPower.Power("power"));

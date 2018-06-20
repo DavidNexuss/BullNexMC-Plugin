@@ -147,6 +147,26 @@ commands:
        description: Fake
        permission: bullnexmc.update
        usage: /<command>
+    bankdeposit:
+       description: Deposita dinero en tu cuenta bancaria
+       permission: bullnexmc.normal
+       usage: /<command> <amount>
+    bankwithdraw:
+       description: Retira dinero en tu cuenta bancaria
+       permission: bullnexmc.normal
+       usage: /<command> <amount>
+    bankcreate:
+       description: Crea una cuenta bancaria
+       permission: bullnexmc.normal
+       usage: /<command>
+    banksetlocation:
+       description: Establece los puntos de gestiones bancarias (Solo OP)
+       permission: bullnexmc.update
+       usage: /<command>
+    bankstatus:
+       description: Comprueba tu saldo y otra informacion de tu cuenta
+       permission: bullnexmc.normal
+       usage: /<command>
 
 permissions:
     bullnexmc.update:

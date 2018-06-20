@@ -3,8 +3,13 @@ package com.nsoft.bullnexmc.gang;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +18,7 @@ import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -26,41 +32,58 @@ public class BankUser {
 	static File BankFile;
 	static FileConfiguration BankF;
 	
-	private static Location Withdraw;
-	private static Location Deposit;
-	private static Location Create;
+	private static Location Withdraw = SpigotPlugin.plugin.getServer().getWorld("world").getSpawnLocation();
+	private static Location Deposit = SpigotPlugin.plugin.getServer().getWorld("world").getSpawnLocation();
+	private static Location Create = SpigotPlugin.plugin.getServer().getWorld("world").getSpawnLocation();
 	
 	private static float interest = 0.002f;
 	
 	private float bankmoney = 0;
-	private Calendar lastOperation;
+	private Date lastOperation;
 	private UUID playerUUID;
 	
+	public static SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+	
+	public static Location getWithdrawLocation() {return Withdraw;}
 	public static void setNewWithdrawLocation(Location a) {
 		
 		Withdraw = new Location(a.getWorld(), a.getX(), a.getY(), a.getZ());
 		BankF.set("WithdrawLOC", new Vector(a.getX(), a.getY(), a.getZ()));
+		save();
 	}
 	
+	public static Location getDepositLocation() {return Deposit;}
 	public static void setNewDepositLocation(Location a) {
 		
 		Deposit = new Location(a.getWorld(), a.getX(), a.getY(), a.getZ());
 		BankF.set("DepositLOC", new Vector(a.getX(), a.getY(), a.getZ()));
+		save();
 	}
 	
+	public static Location getCreationLocation() {return Create;}
 	public static void setNewCreationLocation(Location a) {
 		
 		Create = new Location(a.getWorld(), a.getX(), a.getY(), a.getZ());
 		BankF.set("CreateLOC", new Vector(a.getX(), a.getY(), a.getZ()));
+		save();
 	}
 
+	public static float getInterest() {return interest;}
 	public static void setNewInterest(float interest) {
 		
 		BankUser.interest = interest;
 		BankF.set("Interest", interest);
+		save();
 	}
 	
-	public BankUser(UUID uid,float bankmoney,Calendar lastoperation) {
+	public static Date getCurrentDate() {
+		
+		Calendar p = Calendar.getInstance();
+		return new Date(p.get(Calendar.YEAR)- 1900, p.get(Calendar.MONTH), 
+				p.get(Calendar.DAY_OF_MONTH), p.get(Calendar.HOUR_OF_DAY), p.get(Calendar.MINUTE), p.get(Calendar.SECOND));
+	}
+	//--------OBJECT-------------
+	public BankUser(UUID uid,float bankmoney,Date lastoperation) {
 		
 		playerUUID = uid;
 		this.bankmoney = bankmoney;
@@ -71,14 +94,16 @@ public class BankUser {
 		
 		bankmoney = getBalanceWithInterest();
 		bankmoney += deposit;
-		lastOperation = Calendar.getInstance();
+		lastOperation = getCurrentDate();
+		save();
 	}
 	
 	public void withdraw(float wth) {
 		
 		bankmoney = getBalanceWithInterest();
 		bankmoney -= wth;
-		lastOperation = Calendar.getInstance();
+		lastOperation = getCurrentDate();
+		save();
 	}
 	public float getBalance() {
 		
@@ -88,7 +113,7 @@ public class BankUser {
 	//TODO Time
 	public float getBalanceWithInterest() {
 		
-		return getBalance() * (1 + interest*elapsed());
+		return (float) (getBalance()* Math.pow(Math.E, interest* elapsed()/60f));
 	}
 	
 	public float elapsed() {
@@ -99,35 +124,53 @@ public class BankUser {
 		
 		float melapsed = 0;
 		
-		float cday = current.get(Calendar.DAY_OF_YEAR);
-		float lday = lastOperation.get(Calendar.DAY_OF_YEAR);
+		float cyea = current.get(Calendar.YEAR);
+		float lyea = lastOperation.getYear() + 1900;
+		
+		melapsed += 12*30*24*60*(cyea - lyea);
+		
+		float cmon = current.get(Calendar.MONTH);
+		float lmon = lastOperation.getMonth();
+		
+		melapsed += 30*24*60*(cmon - lmon);
+		
+		float cday = current.get(Calendar.DAY_OF_MONTH);
+		float lday = lastOperation.getDate();
 		
 		melapsed += 24*60*(cday - lday);
 		
 		float chour = current.get(Calendar.HOUR_OF_DAY);
-		float dhour = lastOperation.get(Calendar.HOUR_OF_DAY);
+		float dhour = lastOperation.getHours();
 		
 		melapsed += 60*(chour - dhour);
 		
 		float cminut = current.get(Calendar.MINUTE);
-		float dminut = lastOperation.get(Calendar.MINUTE);
+		float dminut = lastOperation.getMinutes();
 		
 		melapsed += (cminut - dminut);
 		
 		return melapsed;
 	}
+	
+	public Date getLastOperation() {return lastOperation;}
 	public static void init() {
 		
 		BankFile = new File(SpigotPlugin.plugin.getDataFolder() , "bank.yml");
 		
-		boolean neew = false;
 		if(!BankFile.exists()) {
 			
-			BankFile.getParentFile().mkdirs();
-			SpigotPlugin.plugin.saveResource("bank.yml", false);
-			neew = true;
+			try {
+				BankFile.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+		boolean neew = false;
 		
+		neew = BankFile.length() == 0;
+		
+		System.out.println("NEEEW  " + neew);
 		BankF = new YamlConfiguration();
 		
 		if(neew) {
@@ -137,8 +180,8 @@ public class BankUser {
 			BankF.set("DepositLOC", new Vector(0, 0, 0));
 			BankF.set("CreateLOC", new Vector(0, 0, 0));
 			BankF.set("Interest", 0.002);
-			Map<UUID, List<?>> map = new HashMap<>();
-			BankF.set("Bankusers", map);
+			BankF.createSection("Bankusers");
+			save();
 		}
 		try {
 			
@@ -151,18 +194,21 @@ public class BankUser {
 	}
 	public static void save() {
 		
-		Map<UUID,List<?>> map = new HashMap<>();
+		ConfigurationSection banks = BankF.createSection("Bankusers");
 		
-		for (UUID uid : BankUsersMap.keySet()) {
+		int i = 0;
+		for (UUID u : BankUsersMap.keySet()) {
 			
-			BankUser a = BankUsersMap.get(uid);
+			ConfigurationSection p = banks.createSection(i+"");
 			
-			ArrayList<Object> list = new ArrayList<>();
-			list.add(uid);
-			list.add(a.bankmoney);
-			list.add(a.lastOperation);
+			ConfigurationSection uid = p.createSection("uuid");
+			uid.set("0", u.getMostSignificantBits());
+			uid.set("1", u.getLeastSignificantBits());
 			
-			map.put(uid, list);
+			p.set("balance", BankUsersMap.get(u).bankmoney);
+			p.set("last", format.format(BankUsersMap.get(u).lastOperation));
+			
+			i++;
 		}
 		try {
 			BankF.save(BankFile);
@@ -185,14 +231,30 @@ public class BankUser {
 		
 		interest = i;
 		
-		Map<UUID, List<?>> map = (Map<UUID, List<?>>) BankF.getMapList("Bankusers");
+		ConfigurationSection banks = BankF.getConfigurationSection("Bankusers");
 		
-		for (UUID key : map.keySet()) {
+		for(String key : banks.getKeys(false)) {
+		     
+			ConfigurationSection pl = banks.getConfigurationSection(key);
+			ConfigurationSection uid = pl.getConfigurationSection("uuid");
 			
-			List a = map.get(key);
-			UUID uid = (UUID) a.get(0);
-			BankUsersMap.put(uid,new BankUser(uid,(float)a.get(1),(Calendar) a.get(2)));
+			try {
+				Date dat = format.parse(pl.getString("last"));
+				BankUser p = new BankUser(new UUID(uid.getLong("0"), uid.getLong("1")), (float)pl.getDouble("balance"), dat);
+				
+				BankUsersMap.put(new UUID(uid.getLong("0"), uid.getLong("1")), p);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
+		
+	}
+	public String getLastOperationAsString() {
+		
+		return format.format(lastOperation);
+
 	}
 	
 }

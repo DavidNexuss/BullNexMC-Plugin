@@ -28,7 +28,7 @@ import com.nsoft.bullnexmc.SpigotPlugin;
 
 public class BankUser {
 
-	static HashMap<UUID, BankUser> BankUsersMap = new HashMap<>();
+	static HashMap<String, BankUser> BankUsersMap = new HashMap<>();
 	static File BankFile;
 	static FileConfiguration BankF;
 	
@@ -40,7 +40,7 @@ public class BankUser {
 	
 	private float bankmoney = 0;
 	private Date lastOperation;
-	private UUID playerUUID;
+	private String playerName;
 	
 	public static SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
 	
@@ -83,9 +83,9 @@ public class BankUser {
 				p.get(Calendar.DAY_OF_MONTH), p.get(Calendar.HOUR_OF_DAY), p.get(Calendar.MINUTE), p.get(Calendar.SECOND));
 	}
 	//--------OBJECT-------------
-	public BankUser(UUID uid,float bankmoney,Date lastoperation) {
+	public BankUser(String name,float bankmoney,Date lastoperation) {
 		
-		playerUUID = uid;
+		playerName = name;
 		this.bankmoney = bankmoney;
 		this.lastOperation = lastoperation;
 	}
@@ -196,19 +196,12 @@ public class BankUser {
 		
 		ConfigurationSection banks = BankF.createSection("Bankusers");
 		
-		int i = 0;
-		for (UUID u : BankUsersMap.keySet()) {
+		for (String name : BankUsersMap.keySet()) {
 			
-			ConfigurationSection p = banks.createSection(i+"");
+			ConfigurationSection p = banks.createSection(name);
+			p.set("balance", BankUsersMap.get(name).bankmoney);
+			p.set("last", format.format(BankUsersMap.get(name).lastOperation));
 			
-			ConfigurationSection uid = p.createSection("uuid");
-			uid.set("0", u.getMostSignificantBits());
-			uid.set("1", u.getLeastSignificantBits());
-			
-			p.set("balance", BankUsersMap.get(u).bankmoney);
-			p.set("last", format.format(BankUsersMap.get(u).lastOperation));
-			
-			i++;
 		}
 		try {
 			BankF.save(BankFile);
@@ -233,16 +226,15 @@ public class BankUser {
 		
 		ConfigurationSection banks = BankF.getConfigurationSection("Bankusers");
 		
-		for(String key : banks.getKeys(false)) {
+		for(String name : banks.getKeys(false)) {
 		     
-			ConfigurationSection pl = banks.getConfigurationSection(key);
-			ConfigurationSection uid = pl.getConfigurationSection("uuid");
+			ConfigurationSection pl = banks.getConfigurationSection(name);
 			
 			try {
 				Date dat = format.parse(pl.getString("last"));
-				BankUser p = new BankUser(new UUID(uid.getLong("0"), uid.getLong("1")), (float)pl.getDouble("balance"), dat);
+				BankUser p = new BankUser(name, (float)pl.getDouble("balance"), dat);
 				
-				BankUsersMap.put(new UUID(uid.getLong("0"), uid.getLong("1")), p);
+				BankUsersMap.put(name, p);
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

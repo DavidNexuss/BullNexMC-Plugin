@@ -170,7 +170,7 @@ public class Bank {
 							
 							if(args[1] == null) return false;
 							
-							args[1] = (Float.parseFloat(args[1]) + a.getBalanceWithInterest()) + "";
+							args[1] = f((Float.parseFloat(args[1]) + a.getBalanceWithInterest())) + "";
 							args[0] = "waituntil";
 						}
 						if(args[0].equals("waituntil")) {
@@ -223,7 +223,7 @@ public class Bank {
 					sender.sendMessage(B + "Tu balance inicial era de: " + ChatColor.YELLOW + money + c);
 					sender.sendMessage(B + "Interes aplicado: " + ChatColor.GREEN + BankUser.getInterest()*100 + "%");
 					sender.sendMessage(B + "Tu ultima transacción fue: " + ChatColor.YELLOW + lastOp + ChatColor.WHITE);
-					sender.sendMessage(B + "Tiempo transcurrido desde entonces: " + ChatColor.YELLOW + elapsed/60f + ChatColor.WHITE + "h");
+					sender.sendMessage(B + "Tiempo transcurrido desde entonces: " + ChatColor.YELLOW + f(elapsed/60f) + ChatColor.WHITE + "h");
 					sender.sendMessage(B + "Obtienes un balance total de: " + ChatColor.GREEN +  moneyI + c);
 					sender.sendMessage(B + "Aumentaste tu patrimonio en " + ChatColor.GREEN + f((moneyI - money)) + c);
 				

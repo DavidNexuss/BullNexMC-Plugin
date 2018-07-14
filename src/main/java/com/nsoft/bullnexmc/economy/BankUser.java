@@ -1,4 +1,4 @@
-package com.nsoft.bullnexmc.gang;
+package com.nsoft.bullnexmc.economy;
 
 import java.io.File;
 import java.io.IOException;

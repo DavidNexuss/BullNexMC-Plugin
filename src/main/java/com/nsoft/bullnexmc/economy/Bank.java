@@ -1,4 +1,4 @@
-package com.nsoft.bullnexmc.gang;
+package com.nsoft.bullnexmc.economy;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
@@ -11,11 +11,12 @@ import org.bukkit.entity.Player;
 
 import com.nsoft.bullnexmc.MyComandExecutor;
 import com.nsoft.bullnexmc.SpigotPlugin;
+import com.nsoft.bullnexmc.gang.Gang;
 
 public class Bank {
 
 	
-	public static String B = ChatColor.BLUE + "[BANCO]" + ChatColor.WHITE;
+	public static final String B = ChatColor.BLUE + "[BANCO]" + ChatColor.WHITE;
 	
 	public static DecimalFormat f = new DecimalFormat("#.##");
 	

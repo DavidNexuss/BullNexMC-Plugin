@@ -22,7 +22,7 @@ import net.milkbowl.vault.economy.Economy;
 
 public class Gang {
 
-	static Economy eco = null; 
+	public static Economy eco = null; 
 	
 	static ArrayList<GangPlayer> players = new ArrayList<>();
 	static ArrayList<Mafia> mafias = new ArrayList<>();

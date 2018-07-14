@@ -14,8 +14,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.avaje.ebeaninternal.server.subclass.GetterSetterMethods;
-import com.nsoft.bullnexmc.gang.Bank;
-import com.nsoft.bullnexmc.gang.BankUser;
+import com.nsoft.bullnexmc.economy.Bank;
+import com.nsoft.bullnexmc.economy.BankUser;
+import com.nsoft.bullnexmc.economy.MarketValue;
 import com.nsoft.bullnexmc.gang.Gang;
 import com.nsoft.misc.Freeze;
 import com.nsoft.misc.Magma;
@@ -135,6 +136,7 @@ public class SpigotPlugin extends JavaPlugin implements Listener {
     	getServer().broadcast( ChatColor.GREEN +"[BullNexRP] " + ChatColor.BLUE + "Plugin iniciado!", "bullnexmc.update");
         // Commands enabled with following method must have entries in plugin.yml
     	
+    	getCommand("marketvalue").setExecutor(new MarketValue("marketvalue"));
     	getCommand("bankcreate").setExecutor(new Bank.CreateBankUser("bankcreate"));
     	getCommand("bankdeposit").setExecutor(new Bank.DepositMoney("bankdeposit"));
     	getCommand("bankwithdraw").setExecutor(new Bank.WithDrawMoney("bankwithdraw"));

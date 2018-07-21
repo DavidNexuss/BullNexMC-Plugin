@@ -6,17 +6,16 @@ import org.bukkit.block.Chest;
 import org.bukkit.material.Sign;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class CorpVault {
+public class CorpVault extends CorpComponent{
 
 	private Sign vaultSign;
 	private Chest vaultChest;
 	private Location location;
 	
-	private ConfigurationSection section;
-	public CorpVault(Location l,ConfigurationSection section) {
+	public CorpVault(Corp corp,ConfigurationSection section,Location location) {
 		
-		this.section = section;
-		location = l;
+		super(corp, section);
+		this.location = location;
 		loadVault();
 	}
 	
@@ -37,5 +36,10 @@ public class CorpVault {
 		}
 		
 		vaultChest = (Chest) location.getBlock().getRelative(vaultSign.getAttachedFace());
+	}
+	
+	@Override
+	void load() {
+		
 	}
 }

@@ -175,6 +175,10 @@ commands:
        description: Muestra el valor del objeto seleccionado
        permission: bullnexmc.normal
        usage: /<command>
+    ticketdebug:
+       description: Prueba un ticket
+       permission: bullnexmc.normal
+       usage: /<command>
 
 permissions:
     bullnexmc.update:

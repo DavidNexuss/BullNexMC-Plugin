@@ -24,7 +24,7 @@ public class Bank {
 		
 		return  (float) (Math.floor(d* 100) / 100);
 	}
-	
+
 	public static class SetInterest extends MyComandExecutor{
 		
 		public SetInterest(String name) {
@@ -238,6 +238,20 @@ public class Bank {
 			}
 		}
 	}
+	/*public static class BankHelp extends MyComandExecutor{
+		
+		public BankHelp(String name) {
+			
+			super(name);
+		}
+		
+		@Override
+		public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+			// TODO Auto-generated method stub
+			if(!super.onCommand(sender, command, label, args)) return true;
+			return true;
+		}
+	}*/
 	public static class DepositMoney extends MyComandExecutor{
 		
 		public DepositMoney(String name) {

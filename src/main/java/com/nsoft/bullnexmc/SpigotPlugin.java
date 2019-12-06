@@ -14,8 +14,11 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.avaje.ebeaninternal.server.subclass.GetterSetterMethods;
+import com.nsoft.bullnexmc.bungee.pingServer;
 import com.nsoft.bullnexmc.economy.Bank;
 import com.nsoft.bullnexmc.economy.BankUser;
+import com.nsoft.bullnexmc.economy.Corp;
+import com.nsoft.bullnexmc.economy.CorpCommands;
 import com.nsoft.bullnexmc.economy.MarketValue;
 import com.nsoft.bullnexmc.gang.Gang;
 import com.nsoft.misc.Freeze;
@@ -104,6 +107,10 @@ public class SpigotPlugin extends JavaPlugin implements Listener {
     	
     }
     
+    private void echoDiscord() {
+    	plugin.getServer().broadcast(ChatColor.BLUE + "[Discord]: " + ChatColor.AQUA + "Vente a nuestro servidor de discord: " + ChatColor.LIGHT_PURPLE + "https://discord.gg/nygpwS6","bullnexmc.update");
+    	plugin.getServer().getScheduler().runTaskLater(plugin, ()->echoDiscord(), 36000);
+    }
     private void createConfig() {
         try {
             if (!getDataFolder().exists()) {
@@ -125,7 +132,7 @@ public class SpigotPlugin extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         // Don't log enabling, Spigot does that for you automatically!
-    	
+    	pingServer.start();
     	createConfig();
     	
     	Update.PluginSize = checkSieze();
@@ -133,9 +140,12 @@ public class SpigotPlugin extends JavaPlugin implements Listener {
     	
     	Gang.init(getConfig(), this);
     	BankUser.init();
+    	Corp.init();
     	getServer().broadcast( ChatColor.GREEN +"[BullNexRP] " + ChatColor.BLUE + "Plugin iniciado!", "bullnexmc.update");
-        // Commands enabled with following method must have entries in plugin.yml
+        echoDiscord();
+    	// Commands enabled with following method must have entries in plugin.yml
     	
+    	getCommand("ticketdebug").setExecutor(new CorpCommands.TicketDebug("ticketdebug"));
     	getCommand("marketvalue").setExecutor(new MarketValue("marketvalue"));
     	getCommand("bankcreate").setExecutor(new Bank.CreateBankUser("bankcreate"));
     	getCommand("bankdeposit").setExecutor(new Bank.DepositMoney("bankdeposit"));
@@ -161,6 +171,7 @@ public class SpigotPlugin extends JavaPlugin implements Listener {
         getCommand("bn-size").setExecutor(a);
         
         getServer().getPluginManager().registerEvents(this, this);
+        
     }
     
     

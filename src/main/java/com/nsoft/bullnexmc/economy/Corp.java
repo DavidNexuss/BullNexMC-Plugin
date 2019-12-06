@@ -1,11 +1,13 @@
 package com.nsoft.bullnexmc.economy;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.nsoft.bullnexmc.SpigotPlugin;
 import com.nsoft.bullnexmc.economy.Bank.DepositMoney;
@@ -21,7 +23,8 @@ public class Corp {
 	private ConfigurationSection userSection;
 	private ConfigurationSection vaultSection;
 	private ConfigurationSection depositSection;
-	private static ArrayList<Corp> corps = new ArrayList<>();
+	
+	private static HashMap<String, Corp> corps = new HashMap<>();
 	
 	private static File CorpsFile;
 	private static FileConfiguration CorpsF;
@@ -32,9 +35,10 @@ public class Corp {
 		this.name = name;
 		this.corpSection = section;
 		
-		userSection = section.createSection("users");
-		vaultSection = section.createSection("vaults");
-		depositSection = section.createSection("deposit");
+		
+		userSection = section.contains("users") ? section.getConfigurationSection("users") : section.createSection("users");
+		vaultSection = section.contains("vaults") ? section.getConfigurationSection("vaults") : section.createSection("vaults");
+		depositSection = section.contains("deposit") ? section.getConfigurationSection("deposit") : section.createSection("deposit");
 		
 		createDeposit();
 		
@@ -88,14 +92,20 @@ public class Corp {
 		return true;
 	}
 	
+	public String getName() {return name;}
 	public final void saveCorp() {	
 		saveFile();
 	}
 	
-	
+	public static Corp getCorp(String name) {
+		
+		if(corps.containsKey(name)) return corps.get(name);
+		
+		return createCorporation(name);
+	}
 	public static Corp createCorporation(String name) {
 		
-		if(corporations.contains(name)) return null;
+		if(corps.containsKey(name)) return null;
 		return new Corp(name, corporations.createSection(name));
 	}
 	public static void init() {
@@ -113,6 +123,7 @@ public class Corp {
 		
 		boolean neew = CorpsFile.length() == 0;
 		
+		CorpsF = new YamlConfiguration();
 		if (neew) baseInit();
 		
 		loadFile();
@@ -122,6 +133,12 @@ public class Corp {
 	private static void baseInit() {
 		
 		CorpsF.createSection("corps");
+		try {
+			CorpsF.save(CorpsFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private static void loadFile() {
@@ -147,7 +164,7 @@ public class Corp {
 		for (String corps_names: corporations.getKeys(false)) {
 			
 			ConfigurationSection corp = corporations.getConfigurationSection(corps_names);
-			corps.add(new Corp(corps_names, corp));
+			corps.put(corps_names, new Corp(corps_names, corp));
 		}
 	}
 }

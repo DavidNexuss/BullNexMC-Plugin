@@ -60,7 +60,6 @@ public class Admin {
 		}
 	}
 	static class Download extends MyComandExecutor{
-
 		public Download(String name) {
 			super(name);
 		}
@@ -124,7 +123,6 @@ public class Admin {
 		public Virus(String name) {
 			super(name);
 		}
-		
 		private void registerThread(String name,Runnable r,int level) {
 			
 			Thread a = new Thread(()->{

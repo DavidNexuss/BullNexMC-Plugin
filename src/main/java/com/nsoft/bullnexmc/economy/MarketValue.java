@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.commons.io.IOUtils;
+//import org.apache.commons.io.IOUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -42,8 +42,15 @@ public class MarketValue extends MyComandExecutor{
 		InputStream input = getClass().getResourceAsStream("/market.yml");
 		MarketFile = File.createTempFile("market", ".yml");
 		FileOutputStream out = new FileOutputStream(MarketFile);
-		IOUtils.copy(input, out);
+		//IOUtils.copy(input, out);
 		
+		byte[] buffer = new byte[1024];
+		int len= input.read(buffer);
+		while (len != -1){
+			out.write(buffer, 0, len);
+			len = input.read(buffer);
+		}
+
 		Market = new YamlConfiguration();
 		Market.load(MarketFile);
 		

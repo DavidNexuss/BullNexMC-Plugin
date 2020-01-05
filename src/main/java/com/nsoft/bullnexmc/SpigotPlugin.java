@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.avaje.ebeaninternal.server.subclass.GetterSetterMethods;
-import com.nsoft.bullnexmc.bungee.pingServer;
+import com.nsoft.bullnexmc.bungee.SQLFactory;
 import com.nsoft.bullnexmc.economy.Bank;
 import com.nsoft.bullnexmc.economy.BankUser;
 import com.nsoft.bullnexmc.economy.Corp;
@@ -50,10 +50,10 @@ public class SpigotPlugin extends JavaPlugin implements Listener {
     	}else {
     		
     		sendMessage(p, "Bienvenido a BullNexMC!",2);
-    		sendMessage(p, "Si tienes dudas visita:",2);
-    		sendMessage(p, "",2); //TODO add Web
     		
     	}
+    	
+    	SQLFactory.updatePlayer(p);
     	
 	}
     public static void BroadCast(String msg) {
@@ -132,7 +132,7 @@ public class SpigotPlugin extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         // Don't log enabling, Spigot does that for you automatically!
-    	pingServer.start();
+    	SQLFactory.start();
     	createConfig();
     	
     	Update.PluginSize = checkSieze();

@@ -5,8 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 
-//import org.apache.commons.io.IOUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -40,7 +40,7 @@ public class MarketValue extends MyComandExecutor{
 	private void init() throws FileNotFoundException, IOException, InvalidConfigurationException {
 	
 		InputStream input = getClass().getResourceAsStream("/market.yml");
-		MarketFile = File.createTempFile("market", ".yml");
+		MarketFile = Files.createTempFile("market",".yml").toFile();
 		FileOutputStream out = new FileOutputStream(MarketFile);
 		//IOUtils.copy(input, out);
 		
